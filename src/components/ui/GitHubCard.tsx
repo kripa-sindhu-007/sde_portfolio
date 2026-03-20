@@ -127,9 +127,9 @@ const fadeIn = {
   show: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] as const },
   },
-};
+} as const;
 
 function AnimatedNumber({ value, delay = 0 }: { value: number; delay?: number }) {
   const [display, setDisplay] = useState(0);
