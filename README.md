@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SDE Portfolio
 
-## Getting Started
+Personal developer portfolio built with **Next.js (App Router)**, **TypeScript**, and **Tailwind CSS**.  
+Showcases selected projects, skills, experience, and publications using a clean, data-driven setup (`src/data/*`).
 
-First, run the development server:
+## Tech Stack
+- **Framework:** Next.js
+- **Language:** TypeScript
+- **UI:** Tailwind CSS, React Icons, Motion
+- **Video (optional):** Remotion (portfolio demo rendering)
+- **Tooling:** ESLint
 
+## Quick Start
+
+### 1) Install
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2) Run locally
+```bash
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Then open `http://localhost:3000`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3) Build / start
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Where to edit content (important)
+This portfolio is **data-driven**. Update these files to change what appears on the site:
 
-To learn more about Next.js, take a look at the following resources:
+- `src/data/projects.ts` — projects shown on the portfolio
+- `src/data/skills.ts` — skills list
+- `src/data/experience.ts` — experience timeline
+- `src/data/publications.ts` — publications/articles
+- `src/data/social.ts` — social/contact links
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Featured Projects (from `src/data/projects.ts`)
+- **Feature Flag Platform** — Dynamic feature rollouts without redeployment  
+  Tech: Go, Next.js, TypeScript, PostgreSQL, Redis, SSE, Docker  
+  Repo: https://github.com/kripa-sindhu-007/feature-flag-system
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Distributed Task Queue** — Priority scheduling with real-time monitoring  
+  Tech: Go, Next.js, Redis, Docker, GitHub Actions, TypeScript  
+  Repo: https://github.com/kripa-sindhu-007/task-queue-educational-dashboard
 
-## Deploy on Vercel
+- **AI Travel Planner** — AI-powered trip planning for effortless travel  
+  Tech: React Native, JavaScript, AI APIs, Android, Firebase  
+  Repo: https://github.com/kripa-sindhu-007/ai_travel_planner_app
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **HTTP Server from Scratch** — Custom HTTP server built on raw TCP sockets  
+  Tech: JavaScript, Node.js, TCP Sockets, HTTP/1.1  
+  Repo: https://github.com/kripa-sindhu-007/http-server-js
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **MERN Project CLI** — One command to scaffold a full-stack MERN project  
+  Tech: JavaScript, Node.js, npm, Express, React, CLI  
+  Repo: https://github.com/kripa-sindhu-007/mern-project-cli
+
+## Remotion (optional)
+If you’re using the Remotion demo:
+
+- Open Remotion Studio:
+```bash
+npm run remotion:studio
+```
+
+- Render the demo video:
+```bash
+npm run remotion:render
+```
+
+Output: `out/demo.mp4`
+
+## Deployment
+Deploy easily on **Vercel** (recommended for Next.js).  
+After deploying, add the live URL to your GitHub repo “About” section.
+
+## License
+This project is for personal portfolio use. If you fork it, please replace the data in `src/data/*` with your own.
