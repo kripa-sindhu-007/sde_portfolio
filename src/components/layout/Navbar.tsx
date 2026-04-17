@@ -8,6 +8,7 @@ const navLinks = [
   { label: "Experience", href: "#experience", icon: "work_history" },
   { label: "Projects", href: "#projects", icon: "folder_special" },
   { label: "Publications", href: "#publications", icon: "menu_book" },
+  { label: "Articles", href: "#articles", icon: "article" },
   { label: "Skills", href: "#skills", icon: "code" },
   { label: "Achievements", href: "#achievements", icon: "emoji_events" },
   { label: "Contact", href: "#contact", icon: "mail" },

@@ -171,8 +171,8 @@ function ProjectIllustration({ id }: { id: string }) {
         </svg>
       );
 
-    /* ── HTTP Server: protocol layer stack ── */
-    case "http-server-js":
+    /* ── EV Routing: green-zone aware route with charging ── */
+    case "ev-routing-green-v2g":
       return (
         <svg viewBox="0 0 380 140" fill="none" className="w-full h-full">
           {/* Grid dots */}
@@ -187,46 +187,47 @@ function ProjectIllustration({ id }: { id: string }) {
               />
             ))
           )}
-          {/* Request arrow */}
-          <text x="30" y="18" className="fill-primary/25 text-[8px]" fontFamily="monospace">REQUEST</text>
-          <line x1="82" y1="14" x2="120" y2="14" strokeWidth="1" style={{ stroke: pc(15) }} />
-          <polygon points="118,10 125,14 118,18" style={{ fill: pc(20) }} />
-          {/* Client */}
-          <rect x="20" y="30" width="70" height="36" rx="6" strokeWidth="1" style={{ stroke: pc(20), fill: pc(3) }} />
-          <text x="55" y="46" textAnchor="middle" className="fill-primary/30 text-[7px]" fontFamily="monospace">Client</text>
-          <text x="55" y="58" textAnchor="middle" className="fill-primary/50 text-[9px]" fontFamily="monospace" fontWeight="600">GET /api</text>
-          {/* Arrow */}
-          <line x1="95" y1="48" x2="120" y2="48" strokeWidth="1" strokeDasharray="3 2" style={{ stroke: pc(15) }} />
-          <polygon points="118,44 125,48 118,52" style={{ fill: pc(20) }} />
-          {/* TCP Layer */}
-          <rect x="130" y="24" width="80" height="22" rx="4" strokeWidth="0.8" style={{ stroke: pc(15), fill: pc(3) }} />
-          <text x="170" y="39" textAnchor="middle" className="fill-primary/30 text-[8px]" fontFamily="monospace">TCP :3000</text>
-          {/* HTTP Parser Layer */}
-          <rect x="130" y="50" width="80" height="22" rx="4" strokeWidth="0.8" style={{ stroke: pc(25), fill: pc(5) }} />
-          <text x="170" y="65" textAnchor="middle" className="fill-primary/45 text-[8px]" fontFamily="monospace">HTTP Parse</text>
-          {/* Router Layer */}
-          <rect x="130" y="76" width="80" height="22" rx="4" strokeWidth="0.8" style={{ stroke: tc(25), fill: tc(4) }} />
-          <text x="170" y="91" textAnchor="middle" className="fill-tertiary/45 text-[8px]" fontFamily="monospace">Router</text>
-          {/* Vertical flow arrows inside stack */}
-          <line x1="170" y1="46" x2="170" y2="50" strokeWidth="0.8" style={{ stroke: pc(15) }} />
-          <line x1="170" y1="72" x2="170" y2="76" strokeWidth="0.8" style={{ stroke: pc(15) }} />
-          {/* Arrow to handler */}
-          <line x1="215" y1="60" x2="250" y2="60" strokeWidth="1" strokeDasharray="3 2" style={{ stroke: pc(15) }} />
-          <polygon points="248,56 255,60 248,64" style={{ fill: pc(20) }} />
-          {/* Handler / Response */}
-          <rect x="260" y="30" width="90" height="60" rx="8" stroke="rgba(74,222,128,0.2)" strokeWidth="1" fill="rgba(74,222,128,0.03)" />
-          <text x="305" y="48" textAnchor="middle" className="fill-green-400/30 text-[7px]" fontFamily="monospace">RESPONSE</text>
-          <text x="305" y="62" textAnchor="middle" className="fill-green-400/50 text-[10px]" fontFamily="monospace" fontWeight="600">200 OK</text>
-          <text x="305" y="78" textAnchor="middle" className="fill-green-400/25 text-[8px]" fontFamily="monospace">{`{data}`}</text>
-          {/* Footer stats */}
-          <text x="20" y="120" className="fill-primary/20 text-[8px]" fontFamily="monospace">no framework</text>
-          <text x="130" y="120" className="fill-primary/20 text-[8px]" fontFamily="monospace">raw TCP sockets</text>
-          <text x="270" y="120" className="fill-green-400/20 text-[8px]" fontFamily="monospace">HTTP/1.1 compliant</text>
+          {/* Green-zone patches */}
+          <rect x="80" y="24" width="70" height="36" rx="8" fill="rgba(74,222,128,0.05)" stroke="rgba(74,222,128,0.2)" strokeWidth="0.8" strokeDasharray="3 3" />
+          <text x="115" y="44" textAnchor="middle" className="fill-green-400/40 text-[7px]" fontFamily="monospace">GREEN ZONE</text>
+          <rect x="220" y="70" width="80" height="34" rx="8" fill="rgba(74,222,128,0.05)" stroke="rgba(74,222,128,0.2)" strokeWidth="0.8" strokeDasharray="3 3" />
+          <text x="260" y="90" textAnchor="middle" className="fill-green-400/40 text-[7px]" fontFamily="monospace">GREEN ZONE</text>
+          {/* Route path (curved, biased through green zones) */}
+          <path
+            d="M 30 80 C 70 60, 100 38, 145 42 S 210 70, 260 86 S 320 60, 350 50"
+            strokeWidth="1.6"
+            strokeDasharray="5 3"
+            fill="none"
+            style={{ stroke: pc(25) }}
+          />
+          {/* Start */}
+          <circle cx="30" cy="80" r="6" strokeWidth="1" style={{ fill: pc(6), stroke: pc(35) }} />
+          <circle cx="30" cy="80" r="2.5" style={{ fill: pc(50) }} />
+          <text x="30" y="98" textAnchor="middle" className="fill-primary/40 text-[7px]" fontFamily="monospace">START</text>
+          {/* Charging station 1 (mid-route) */}
+          <rect x="138" y="36" width="14" height="14" rx="2" strokeWidth="0.8" style={{ stroke: tc(35), fill: tc(10) }} />
+          <text x="145" y="46" textAnchor="middle" className="fill-tertiary/60 text-[8px]" fontFamily="monospace" fontWeight="700">⚡</text>
+          <text x="145" y="60" textAnchor="middle" className="fill-tertiary/40 text-[6px]" fontFamily="monospace">V2G</text>
+          {/* Charging station 2 */}
+          <rect x="253" y="80" width="14" height="14" rx="2" strokeWidth="0.8" style={{ stroke: tc(35), fill: tc(10) }} />
+          <text x="260" y="90" textAnchor="middle" className="fill-tertiary/60 text-[8px]" fontFamily="monospace" fontWeight="700">⚡</text>
+          {/* Destination */}
+          <circle cx="350" cy="50" r="8" fill="rgba(74,222,128,0.08)" stroke="rgba(74,222,128,0.35)" strokeWidth="1.2" />
+          <circle cx="350" cy="50" r="3" fill="rgba(74,222,128,0.6)" />
+          <text x="350" y="34" textAnchor="middle" className="fill-green-400/45 text-[7px]" fontFamily="monospace">END</text>
+          {/* Battery indicator */}
+          <rect x="20" y="118" width="50" height="7" rx="1.5" strokeWidth="0.7" style={{ stroke: pc(20), fill: pc(4) }} />
+          <rect x="70" y="120.5" width="2" height="2" style={{ fill: pc(20) }} />
+          <rect x="22" y="120" width="32" height="3" style={{ fill: "rgba(74,222,128,0.45)" }} />
+          <text x="80" y="125" className="fill-primary/30 text-[8px]" fontFamily="monospace">SOC 68%</text>
+          {/* Algo label */}
+          <text x="170" y="125" className="fill-primary/25 text-[8px]" fontFamily="monospace">ACO + V2G bias</text>
+          <text x="290" y="125" className="fill-green-400/30 text-[8px]" fontFamily="monospace">eco-optimal</text>
         </svg>
       );
 
-    /* ── MERN CLI: directory scaffold ── */
-    case "mern-project-cli":
+    /* ── 404-UI: framework adapters from one npm package ── */
+    case "404-lib":
       return (
         <svg viewBox="0 0 380 140" fill="none" className="w-full h-full">
           {/* Grid dots */}
@@ -241,53 +242,184 @@ function ProjectIllustration({ id }: { id: string }) {
               />
             ))
           )}
-          {/* Command line */}
-          <text x="20" y="16" className="fill-primary/30 text-[9px]" fontFamily="monospace">$ npx create-mern-app myApp</text>
-          {/* Directory tree */}
-          {/* Root */}
-          <rect x="20" y="26" width="12" height="10" rx="2" style={{ fill: pc(15) }} />
-          <text x="38" y="34" className="fill-primary/50 text-[9px]" fontFamily="monospace" fontWeight="600">myApp/</text>
-          {/* server/ */}
-          <line x1="26" y1="36" x2="26" y2="48" strokeWidth="0.8" style={{ stroke: pc(12) }} />
-          <line x1="26" y1="48" x2="38" y2="48" strokeWidth="0.8" style={{ stroke: pc(12) }} />
-          <rect x="40" y="42" width="10" height="9" rx="2" style={{ fill: tc(15) }} />
-          <text x="56" y="50" className="fill-tertiary/45 text-[9px]" fontFamily="monospace">server/</text>
-          {/* server children */}
-          <line x1="45" y1="51" x2="45" y2="62" strokeWidth="0.7" style={{ stroke: pc(8) }} />
-          <line x1="45" y1="62" x2="56" y2="62" strokeWidth="0.7" style={{ stroke: pc(8) }} />
-          <text x="58" y="64" className="fill-primary/25 text-[8px]" fontFamily="monospace">routes/ controllers/ index.js</text>
-          {/* client/ */}
-          <line x1="26" y1="48" x2="26" y2="78" strokeWidth="0.8" style={{ stroke: pc(12) }} />
-          <line x1="26" y1="78" x2="38" y2="78" strokeWidth="0.8" style={{ stroke: pc(12) }} />
-          <rect x="40" y="72" width="10" height="9" rx="2" fill="rgba(74,222,128,0.15)" />
-          <text x="56" y="80" className="fill-green-400/45 text-[9px]" fontFamily="monospace">client/</text>
-          {/* client children */}
-          <line x1="45" y1="81" x2="45" y2="92" strokeWidth="0.7" style={{ stroke: pc(8) }} />
-          <line x1="45" y1="92" x2="56" y2="92" strokeWidth="0.7" style={{ stroke: pc(8) }} />
-          <text x="58" y="94" className="fill-primary/25 text-[8px]" fontFamily="monospace">src/ public/ App.jsx</text>
-          {/* package.json */}
-          <line x1="26" y1="78" x2="26" y2="108" strokeWidth="0.8" style={{ stroke: pc(12) }} />
-          <line x1="26" y1="108" x2="38" y2="108" strokeWidth="0.8" style={{ stroke: pc(12) }} />
-          <text x="40" y="110" className="fill-primary/30 text-[8px]" fontFamily="monospace">package.json  .gitignore  README.md</text>
+          {/* npm pill */}
+          <rect x="20" y="14" width="46" height="14" rx="3" strokeWidth="0.8" style={{ stroke: tc(30), fill: tc(8) }} />
+          <text x="43" y="24" textAnchor="middle" className="fill-tertiary/70 text-[8px]" fontFamily="monospace" fontWeight="700">npm</text>
+          <text x="72" y="24" className="fill-primary/40 text-[8px]" fontFamily="monospace">@kripa006/404-ui</text>
+          {/* Central 404 block */}
+          <rect x="30" y="42" width="110" height="74" rx="10" strokeWidth="1.2" style={{ stroke: pc(35), fill: pc(5) }} />
+          <text x="85" y="82" textAnchor="middle" className="fill-primary/60 text-[32px]" fontFamily="monospace" fontWeight="800">404</text>
+          <text x="85" y="100" textAnchor="middle" className="fill-primary/30 text-[7px]" fontFamily="monospace">not found</text>
+          <text x="85" y="110" textAnchor="middle" className="fill-primary/25 text-[7px]" fontFamily="monospace">animated</text>
+          {/* Branching arrows to frameworks */}
+          <line x1="140" y1="60" x2="200" y2="52" strokeWidth="1" strokeDasharray="3 2" style={{ stroke: pc(20) }} />
+          <polygon points="198,48 205,52 198,56" style={{ fill: pc(25) }} />
+          <line x1="140" y1="80" x2="200" y2="80" strokeWidth="1" strokeDasharray="3 2" style={{ stroke: pc(20) }} />
+          <polygon points="198,76 205,80 198,84" style={{ fill: pc(25) }} />
+          <line x1="140" y1="100" x2="200" y2="108" strokeWidth="1" strokeDasharray="3 2" style={{ stroke: pc(20) }} />
+          <polygon points="198,104 205,108 198,112" style={{ fill: pc(25) }} />
+          {/* React adapter */}
+          <rect x="208" y="40" width="86" height="20" rx="4" strokeWidth="0.8" style={{ stroke: pc(30), fill: pc(6) }} />
+          <circle cx="220" cy="50" r="4" fill="none" strokeWidth="0.8" style={{ stroke: pc(55) }} />
+          <circle cx="220" cy="50" r="1.2" style={{ fill: pc(60) }} />
+          <text x="232" y="54" className="fill-primary/55 text-[9px]" fontFamily="monospace" fontWeight="600">react</text>
+          {/* Vue adapter */}
+          <rect x="208" y="68" width="86" height="20" rx="4" strokeWidth="0.8" style={{ stroke: "rgba(74,222,128,0.3)", fill: "rgba(74,222,128,0.05)" }} />
+          <polygon points="214,72 226,72 220,84" style={{ fill: "rgba(74,222,128,0.45)" }} />
+          <text x="234" y="82" className="fill-green-400/55 text-[9px]" fontFamily="monospace" fontWeight="600">vue</text>
+          {/* Vanilla JS adapter */}
+          <rect x="208" y="96" width="86" height="20" rx="4" strokeWidth="0.8" style={{ stroke: tc(30), fill: tc(6) }} />
+          <rect x="215" y="101" width="10" height="10" rx="1.5" style={{ fill: tc(40) }} />
+          <text x="221" y="110" textAnchor="middle" className="fill-tertiary/80 text-[7px]" fontFamily="monospace" fontWeight="800">JS</text>
+          <text x="234" y="110" className="fill-tertiary/55 text-[9px]" fontFamily="monospace" fontWeight="600">vanilla</text>
+          {/* Build label */}
+          <text x="308" y="80" className="fill-primary/20 text-[7px]" fontFamily="monospace">tree-</text>
+          <text x="308" y="90" className="fill-primary/20 text-[7px]" fontFamily="monospace">shakable</text>
+          <circle cx="340" cy="86" r="10" strokeWidth="0.8" style={{ stroke: pc(20), fill: pc(3) }} />
+          <text x="340" y="89" textAnchor="middle" className="fill-primary/50 text-[9px]" fontFamily="monospace" fontWeight="700">TS</text>
+        </svg>
+      );
 
-          {/* Right side: progress visualization */}
-          <rect x="230" y="28" width="130" height="85" rx="6" strokeWidth="0.8" style={{ stroke: pc(10), fill: pc(2) }} />
-          <text x="295" y="44" textAnchor="middle" className="fill-primary/25 text-[8px]" fontFamily="monospace">SCAFFOLDING</text>
-          {/* Progress items */}
+    /* ── Environment Manager: reservation grid ── */
+    case "env-allocation":
+      return (
+        <svg viewBox="0 0 380 140" fill="none" className="w-full h-full">
+          {/* Grid dots */}
+          {Array.from({ length: 8 }).map((_, row) =>
+            Array.from({ length: 16 }).map((_, col) => (
+              <circle
+                key={`${row}-${col}`}
+                cx={20 + col * 22}
+                cy={10 + row * 18}
+                r="0.5"
+                style={{ fill: pc(8) }}
+              />
+            ))
+          )}
+          {/* Section labels */}
+          <text x="28" y="18" className="fill-primary/30 text-[8px]" fontFamily="monospace">BACKEND</text>
+          <text x="180" y="18" className="fill-primary/30 text-[8px]" fontFamily="monospace">FRONTEND</text>
+          <text x="320" y="18" className="fill-primary/30 text-[8px]" fontFamily="monospace">QA</text>
+          {/* Environment cells — left column (backend) */}
           {[
-            { label: "backend", pct: 100, color: tc(40) },
-            { label: "frontend", pct: 100, color: "rgba(74,222,128,0.4)" },
-            { label: "git init", pct: 100, color: pc(30) },
-            { label: "deps", pct: 85, color: pc(25) },
-          ].map((item, i) => (
-            <g key={i}>
-              <text x="242" y={60 + i * 16} className="fill-primary/30 text-[7px]" fontFamily="monospace">{item.label}</text>
-              <rect x="285" y={53 + i * 16} width="60" height="5" rx="2.5" style={{ fill: pc(5) }} />
-              <rect x="285" y={53 + i * 16} width={60 * item.pct / 100} height="5" rx="2.5" style={{ fill: item.color }} />
+            { x: 20, y: 26, label: "be-01", status: "free" },
+            { x: 20, y: 52, label: "be-02", status: "reserved" },
+            { x: 20, y: 78, label: "be-03", status: "stale" },
+            { x: 20, y: 104, label: "be-04", status: "free" },
+          ].map((c, i) => {
+            const colors =
+              c.status === "free"
+                ? { stroke: "rgba(74,222,128,0.35)", fill: "rgba(74,222,128,0.07)", text: "fill-green-400/60" }
+                : c.status === "reserved"
+                ? { stroke: tc(30), fill: tc(8), text: "fill-tertiary/60" }
+                : { stroke: pc(15), fill: pc(3), text: "fill-primary/25" };
+            return (
+              <g key={`be-${i}`}>
+                <rect x={c.x} y={c.y} width="120" height="18" rx="3" strokeWidth="0.8" stroke={colors.stroke} fill={colors.fill} />
+                <circle cx={c.x + 8} cy={c.y + 9} r="2" fill={colors.stroke} />
+                <text x={c.x + 18} y={c.y + 12} className={`${colors.text} text-[8px]`} fontFamily="monospace" fontWeight="600">{c.label}</text>
+                <text x={c.x + 112} y={c.y + 12} textAnchor="end" className={`${colors.text} text-[7px]`} fontFamily="monospace">{c.status.toUpperCase()}</text>
+              </g>
+            );
+          })}
+          {/* Environment cells — middle column (frontend) */}
+          {[
+            { x: 150, y: 26, label: "fe-01", status: "reserved" },
+            { x: 150, y: 52, label: "fe-02", status: "free" },
+            { x: 150, y: 78, label: "fe-03", status: "reserved" },
+            { x: 150, y: 104, label: "fe-04", status: "free" },
+          ].map((c, i) => {
+            const colors =
+              c.status === "free"
+                ? { stroke: "rgba(74,222,128,0.35)", fill: "rgba(74,222,128,0.07)", text: "fill-green-400/60" }
+                : { stroke: tc(30), fill: tc(8), text: "fill-tertiary/60" };
+            return (
+              <g key={`fe-${i}`}>
+                <rect x={c.x} y={c.y} width="120" height="18" rx="3" strokeWidth="0.8" stroke={colors.stroke} fill={colors.fill} />
+                <circle cx={c.x + 8} cy={c.y + 9} r="2" fill={colors.stroke} />
+                <text x={c.x + 18} y={c.y + 12} className={`${colors.text} text-[8px]`} fontFamily="monospace" fontWeight="600">{c.label}</text>
+                <text x={c.x + 112} y={c.y + 12} textAnchor="end" className={`${colors.text} text-[7px]`} fontFamily="monospace">{c.status.toUpperCase()}</text>
+              </g>
+            );
+          })}
+          {/* QA notification panel */}
+          <rect x="285" y="26" width="80" height="96" rx="6" strokeWidth="0.8" style={{ stroke: pc(15), fill: pc(3) }} />
+          <circle cx="325" cy="42" r="7" strokeWidth="0.8" style={{ stroke: tc(35), fill: tc(10) }} />
+          <path d="M 322 40 L 322 45 L 328 45" fill="none" strokeWidth="0.8" style={{ stroke: tc(50) }} />
+          <circle cx="330" cy="38" r="2.5" fill="rgba(239,68,68,0.7)" />
+          <text x="327" y="39" textAnchor="middle" className="fill-white/80 text-[5px]" fontFamily="monospace" fontWeight="700">3</text>
+          <text x="325" y="62" textAnchor="middle" className="fill-tertiary/40 text-[7px]" fontFamily="monospace">NOTIFY</text>
+          {/* notification rows */}
+          <rect x="293" y="70" width="64" height="10" rx="1.5" style={{ fill: tc(6) }} />
+          <rect x="293" y="82" width="64" height="10" rx="1.5" style={{ fill: pc(4) }} />
+          <rect x="293" y="94" width="64" height="10" rx="1.5" style={{ fill: pc(4) }} />
+          <text x="325" y="118" textAnchor="middle" className="fill-primary/25 text-[7px]" fontFamily="monospace">activity</text>
+        </svg>
+      );
+
+    /* ── Browser Volume Control: tab gain pipeline ── */
+    case "browser-volume-control":
+      return (
+        <svg viewBox="0 0 380 140" fill="none" className="w-full h-full">
+          {/* Grid dots */}
+          {Array.from({ length: 8 }).map((_, row) =>
+            Array.from({ length: 16 }).map((_, col) => (
+              <circle
+                key={`${row}-${col}`}
+                cx={20 + col * 22}
+                cy={10 + row * 18}
+                r="0.5"
+                style={{ fill: pc(8) }}
+              />
+            ))
+          )}
+          {/* Browser tab strip */}
+          <rect x="20" y="14" width="200" height="14" rx="2" strokeWidth="0.8" style={{ stroke: pc(15), fill: pc(3) }} />
+          <rect x="24" y="17" width="54" height="8" rx="1" style={{ fill: pc(15) }} />
+          <text x="51" y="23.5" textAnchor="middle" className="fill-primary/70 text-[6px]" fontFamily="monospace" fontWeight="600">youtube</text>
+          <rect x="82" y="17" width="46" height="8" rx="1" style={{ fill: pc(5) }} />
+          <text x="105" y="23.5" textAnchor="middle" className="fill-primary/35 text-[6px]" fontFamily="monospace">spotify</text>
+          <rect x="132" y="17" width="42" height="8" rx="1" style={{ fill: pc(5) }} />
+          <text x="153" y="23.5" textAnchor="middle" className="fill-primary/35 text-[6px]" fontFamily="monospace">docs</text>
+          {/* Audio source */}
+          <rect x="20" y="40" width="70" height="40" rx="6" strokeWidth="1" style={{ stroke: pc(25), fill: pc(5) }} />
+          <text x="55" y="54" textAnchor="middle" className="fill-primary/35 text-[7px]" fontFamily="monospace">AUDIO SRC</text>
+          {/* Tiny input waveform */}
+          <path d="M 28 68 Q 33 58 38 68 T 48 68 T 58 68 T 68 68 T 78 68" strokeWidth="1" fill="none" style={{ stroke: pc(40) }} />
+          {/* Arrow to gain */}
+          <line x1="92" y1="60" x2="118" y2="60" strokeWidth="1" strokeDasharray="3 2" style={{ stroke: pc(20) }} />
+          <polygon points="116,56 123,60 116,64" style={{ fill: pc(25) }} />
+          {/* Gain node */}
+          <circle cx="155" cy="60" r="26" strokeWidth="1.2" style={{ stroke: tc(40), fill: tc(6) }} />
+          <text x="155" y="56" textAnchor="middle" className="fill-tertiary/70 text-[8px]" fontFamily="monospace" fontWeight="700">GAIN</text>
+          <text x="155" y="68" textAnchor="middle" className="fill-tertiary/50 text-[7px]" fontFamily="monospace">0.50</text>
+          {/* Arrow to output */}
+          <line x1="182" y1="60" x2="210" y2="60" strokeWidth="1" strokeDasharray="3 2" style={{ stroke: pc(20) }} />
+          <polygon points="208,56 215,60 208,64" style={{ fill: pc(25) }} />
+          {/* Output destination */}
+          <rect x="220" y="40" width="76" height="40" rx="6" strokeWidth="1" stroke="rgba(74,222,128,0.3)" fill="rgba(74,222,128,0.05)" />
+          <text x="258" y="54" textAnchor="middle" className="fill-green-400/50 text-[7px]" fontFamily="monospace">OUTPUT</text>
+          {/* Smaller output waveform */}
+          <path d="M 228 68 Q 232 63 236 68 T 244 68 T 252 68 T 260 68 T 268 68 T 276 68 T 284 68 T 292 68" strokeWidth="1" fill="none" stroke="rgba(74,222,128,0.45)" />
+          {/* Volume slider */}
+          <rect x="20" y="96" width="200" height="4" rx="2" style={{ fill: pc(6) }} />
+          <rect x="20" y="96" width="100" height="4" rx="2" style={{ fill: tc(45) }} />
+          <circle cx="120" cy="98" r="5" strokeWidth="1" style={{ stroke: tc(50), fill: pc(4) }} />
+          <text x="20" y="116" className="fill-primary/30 text-[8px]" fontFamily="monospace">0%</text>
+          <text x="120" y="116" textAnchor="middle" className="fill-tertiary/50 text-[8px]" fontFamily="monospace" fontWeight="600">50%</text>
+          <text x="220" y="116" textAnchor="end" className="fill-primary/30 text-[8px]" fontFamily="monospace">100%</text>
+          {/* Presets */}
+          {["Q", "M", "L", "F"].map((p, i) => (
+            <g key={p}>
+              <rect x={236 + i * 16} y="94" width="12" height="12" rx="2" strokeWidth="0.7" style={{ stroke: pc(20), fill: pc(4) }} />
+              <text x={242 + i * 16} y="103" textAnchor="middle" className="fill-primary/50 text-[7px]" fontFamily="monospace" fontWeight="700">{p}</text>
             </g>
           ))}
-          {/* Done badge */}
-          <text x="295" y="125" textAnchor="middle" className="fill-green-400/35 text-[9px]" fontFamily="monospace">npm published</text>
+          <text x="278" y="103" className="fill-primary/25 text-[7px]" fontFamily="monospace">presets</text>
+          {/* Footer */}
+          <text x="20" y="130" className="fill-primary/20 text-[8px]" fontFamily="monospace">per-tab</text>
+          <text x="100" y="130" className="fill-primary/20 text-[8px]" fontFamily="monospace">no system audio</text>
+          <text x="230" y="130" className="fill-green-400/25 text-[8px]" fontFamily="monospace">local-first</text>
         </svg>
       );
 

@@ -31,15 +31,54 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "700"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  "https://sde-portfolio-lemon-phi.vercel.app";
+
+const title = "Kripa Sindhu — Software Engineer";
+const description =
+  "Software engineer building distributed systems, AI-adjacent tooling, and the occasional open-source library. Published in Computing (Springer, 2026).";
+
 export const metadata: Metadata = {
-  title: "Kripa Sindhu // Software Engineer",
-  description:
-    "Software engineer portfolio — crafting scalable systems & experiences.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: title,
+    template: "%s // Kripa Sindhu",
+  },
+  description,
+  applicationName: "Kripa Sindhu",
+  authors: [{ name: "Kripa Sindhu", url: siteUrl }],
+  creator: "Kripa Sindhu",
+  keywords: [
+    "Kripa Sindhu",
+    "Software Engineer",
+    "Portfolio",
+    "Distributed Systems",
+    "Go",
+    "Next.js",
+    "TypeScript",
+    "Feature Flags",
+    "EV Routing",
+    "Open Source",
+  ],
   openGraph: {
-    title: "Kripa Sindhu // Software Engineer",
-    description:
-      "Software engineer portfolio — crafting scalable systems & experiences.",
+    title,
+    description,
+    url: siteUrl,
+    siteName: "Kripa Sindhu",
     type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    creator: "@sindhukripa007",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
   },
 };
 
