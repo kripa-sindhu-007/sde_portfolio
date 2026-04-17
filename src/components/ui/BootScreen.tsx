@@ -15,6 +15,7 @@ const BOOT_LINES = [
 
 const TOTAL_DURATION = 2800;
 const PROGRESS_DURATION = 1800;
+const SESSION_KEY = "ks_boot_seen";
 
 export default function BootScreen() {
   const [visible, setVisible] = useState(true);
@@ -40,6 +41,18 @@ export default function BootScreen() {
   }, [startExit]);
 
   useEffect(() => {
+    // Skip entirely for returning visitors within the session.
+    try {
+      if (sessionStorage.getItem(SESSION_KEY) === "1") {
+        setVisible(false);
+        document.body.style.overflow = "";
+        return;
+      }
+      sessionStorage.setItem(SESSION_KEY, "1");
+    } catch {
+      // sessionStorage may be unavailable (private mode, etc.) — fall through and run the boot.
+    }
+
     // Lock scroll during boot
     document.body.style.overflow = "hidden";
 

@@ -1,9 +1,10 @@
+import { Suspense } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/sections/Hero";
 import Projects from "@/components/sections/Projects";
 import Experience from "@/components/sections/Experience";
 import Publications from "@/components/sections/Publications";
-import Articles from "@/components/sections/Articles";
+import Articles, { ArticlesSkeleton } from "@/components/sections/Articles";
 import Skills from "@/components/sections/Skills";
 import Achievements from "@/components/sections/Achievements";
 import Contact from "@/components/sections/Contact";
@@ -24,7 +25,9 @@ export default function Home() {
         <Experience />
         <Projects />
         <Publications />
-        <Articles />
+        <Suspense fallback={<ArticlesSkeleton />}>
+          <Articles />
+        </Suspense>
         <Skills />
         <Achievements />
         <Contact />
