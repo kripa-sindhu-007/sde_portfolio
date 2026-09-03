@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import ThemePicker from "@/components/ui/ThemePicker";
+import { RESUME_URL } from "@/lib/resume";
 
 const navLinks = [
   { label: "Experience", href: "#experience", icon: "work_history" },
@@ -187,7 +188,7 @@ export default function Navbar() {
 
             {/* Resume button */}
             <a
-              href="/Kripa_Sindhu_SDE1.pdf"
+              href={RESUME_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-2 px-4 py-1.5 bg-primary/8 hover:bg-primary/15 border border-primary/15 hover:border-primary/30 rounded-lg transition-all duration-300 group"
@@ -320,7 +321,7 @@ export default function Navbar() {
 
               {/* Resume link in mobile */}
               <motion.a
-                href="/Kripa_Sindhu_SDE1.pdf"
+                href={RESUME_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 initial={{ opacity: 0, x: -20 }}

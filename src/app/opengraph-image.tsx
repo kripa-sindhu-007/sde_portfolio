@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { SITE_HOST } from "@/lib/site";
 
 export const alt = "Kripa Sindhu — Software Engineer";
 export const size = { width: 1200, height: 630 };
@@ -22,19 +23,8 @@ const COLORS = {
   amber: "rgba(255, 183, 134, 0.7)",
 };
 
-function getSiteHost(): string {
-  const raw =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    "https://sde-portfolio-lemon-phi.vercel.app";
-  try {
-    return new URL(raw).host;
-  } catch {
-    return raw.replace(/^https?:\/\//, "").replace(/\/$/, "");
-  }
-}
-
 export default async function OGImage() {
-  const host = getSiteHost();
+  const host = SITE_HOST;
 
   return new ImageResponse(
     (
