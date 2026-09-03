@@ -83,6 +83,42 @@ export const projects: Project[] = [
     ],
   },
   {
+    id: "prahari",
+    title: "prahari",
+    tagline: "Type-safe env config that can't quietly drift",
+    description:
+      "An npm-published TypeScript library that validates your entire environment once at boot and crashes with one readable report — plus a CLI that fails CI when .env.example stops matching the schema.",
+    longDescription:
+      "process.env.* is a bag of untyped strings an app trusts blindly, so a misconfigured deploy doesn't fail when you ship it — it fails later, in production, far from the cause. prahari turns those strings into a typed, validated, frozen config: port() infers number, oneOf([...]) infers a literal union, and every problem in the environment is reported at once in a single table with secrets redacted, at startup. The part no other env library has is the CLI — prahari sync diffs the schema against .env.example and exits 1 in CI, so the file physically cannot drift out of sync with reality. It is schema-agnostic via Standard Schema (bring your own Zod / Valibot / ArkType, or use the built-ins), ships framework boundary guards for Next.js and Vite that throw if a server secret is read from the browser, and the library import pulls in zero dependencies — the CLI's jiti loader never enters your app's runtime. Published to npm with signed provenance, >97% test coverage, and a public API frozen by contract tests.",
+    techStack: [
+      "TypeScript",
+      "Node.js",
+      "Standard Schema",
+      "Vitest",
+      "tsup",
+      "npm",
+      "CLI",
+    ],
+    highlights: [
+      "prahari sync exits 1 in CI — .env.example cannot silently stop describing reality",
+      "Validates the whole environment at boot: one readable table, every error at once, secrets redacted",
+      "Full type inference — port() → number, oneOf([...]) → a literal union",
+      "Schema-agnostic via Standard Schema: bring your own Zod / Valibot / ArkType",
+      "Next.js & Vite boundary guards throw if a server secret is read in the browser",
+      "Published to npm with signed provenance, zero-dependency import, >97% coverage",
+    ],
+    githubUrl: "https://github.com/kripa-sindhu-007/prahari",
+    liveUrl: "https://prahari-azure.vercel.app",
+    category: "Open Source / Developer Tooling",
+    icon: "shield",
+    codePreview: [
+      "const env = defineEnv({",
+      "  PORT: port().default(3000),",
+      "})  // env.PORT → number",
+      "$ prahari sync  → exit 1",
+    ],
+  },
+  {
     id: "ev-routing-green-v2g",
     title: "EV Routing with V2G",
     tagline: "Green-zone-aware routing for electric vehicles",
