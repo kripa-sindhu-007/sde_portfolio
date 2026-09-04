@@ -24,6 +24,19 @@ const fadeUp = {
   },
 } as const;
 
+// The <h1> is the LCP element. It must be visible in the server-rendered HTML —
+// an element at opacity 0 does not count as painted, so animating it in delays
+// LCP by the whole animation duration. Transform-only keeps the entrance motion
+// without that cost.
+const heroTitle = {
+  hidden: { opacity: 1, y: 14 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
+  },
+} as const;
+
 const fadeIn = {
   hidden: { opacity: 0, scale: 0.95 },
   show: {
@@ -33,15 +46,6 @@ const fadeIn = {
   },
 } as const;
 
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.9, filter: "blur(12px)" },
-  show: {
-    opacity: 1,
-    scale: 1,
-    filter: "blur(0px)",
-    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] as const },
-  },
-} as const;
 
 export default function Hero() {
   return (
@@ -101,7 +105,7 @@ export default function Hero() {
 
         {/* Name */}
         <motion.h1
-          variants={scaleIn}
+          variants={heroTitle}
           className="mb-4 text-[clamp(3rem,9vw,8rem)] font-display font-extrabold tracking-[-0.04em] leading-[0.9] text-gradient-primary"
         >
           Kripa Sindhu
