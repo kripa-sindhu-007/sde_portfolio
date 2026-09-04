@@ -1,5 +1,5 @@
 /**
- * Writing published elsewhere.
+ * Writing published elsewhere — Medium and dev.to.
  *
  * Listed on the blog index so it shows the whole body of work, but never
  * republished here: those articles are already indexed with Medium as their
@@ -8,6 +8,10 @@
  *
  * Excluded from RSS on purpose — a feed pointing at another domain is not
  * what someone subscribes for.
+ *
+ * NOTE the dev.to piece is currently its own canonical because it predates this
+ * blog. When it is re-homed here, set canonical_url on dev.to to the blog URL
+ * and move it out of this list.
  */
 export type ExternalPost = {
   title: string;
@@ -23,6 +27,16 @@ export type ExternalPost = {
 };
 
 export const externalPosts: ExternalPost[] = [
+  {
+    title: "Your .env.example is lying to you: catching config drift in TypeScript",
+    url: "https://dev.to/kripasindhu007/your-envexample-is-lying-to-you-catching-config-drift-in-typescript-2j7c",
+    platform: "dev.to",
+    date: "2026-09-02",
+    deck: "A schema that generates your .env.example, and fails CI when the two disagree.",
+    topics: ["typescript", "prahari", "config"],
+    thumbnail:
+      "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.us-east-2.amazonaws.com%2Fuploads%2Farticles%2Fsrk7q8zox03cfpnujslv.png",
+  },
   {
     title: "I Took My Task Queue From a Demo to a Distributed System",
     url: "https://medium.com/@sindhukripa007/i-took-my-task-queue-from-a-demo-to-a-distributed-system-e2ff90db3186",
