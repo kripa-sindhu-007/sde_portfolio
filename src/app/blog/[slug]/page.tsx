@@ -24,7 +24,8 @@ export async function generateMetadata({
   if (!post) return {};
   const url = `${SITE_URL}/blog/${slug}`;
   return {
-    title: `${post.fm.title} — Kripa Sindhu`,
+    // no name suffix here — the root layout's title template already appends it
+    title: post.fm.title,
     description: post.fm.deck,
     alternates: { canonical: post.fm.canonical ?? url },
     openGraph: {
