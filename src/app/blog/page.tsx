@@ -8,7 +8,8 @@ import { BlogBar } from "./BlogBar";
 import { Filters } from "./Filters";
 
 export const metadata: Metadata = {
-  title: "Writing — Kripa Sindhu",
+  // no name suffix — the root layout's title template already appends it
+  title: "Writing",
   description:
     "Notes on distributed systems, performance and the things that only show up once something is running.",
   alternates: {

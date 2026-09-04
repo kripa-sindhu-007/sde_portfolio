@@ -12,6 +12,15 @@ import BinaryTorch from "@/components/ui/BinaryTorch";
 import BootScreen from "@/components/ui/BootScreen";
 import ContextMenu from "@/components/ui/ContextMenu";
 import ScrollBottom from "@/components/ui/ScrollBottom";
+import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/site";
+
+// Declared on the page rather than the root layout: a canonical in the layout is
+// inherited, so any future route that forgot to set its own would claim to be
+// the homepage.
+export const metadata: Metadata = {
+  alternates: { canonical: SITE_URL },
+};
 
 export default async function Home() {
   // fetched here rather than in the browser: one set of calls per
