@@ -9,11 +9,6 @@
 
 /* ── light (base) ───────────────────────────────────────────────── */
 :root {
-  /* native scrollbars, form controls and the canvas follow the theme. Declared
-     in CSS rather than set from JS so it is scoped to wherever this stylesheet
-     loads — which is /blog only. */
-  color-scheme: light;
-
   --bg: #faf9f7;
   --bg-raised: #ffffff;
   --bg-sunken: #f0eeea;
@@ -46,7 +41,6 @@
 /* ── dark ───────────────────────────────────────────────────────── */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    color-scheme: dark;
     --bg: #131314;
     --bg-raised: #1c1b1c;
     --bg-sunken: #0e0e0f;
@@ -70,7 +64,6 @@
 }
 
 :root[data-theme="dark"] {
-  color-scheme: dark;
   --bg: #131314;
   --bg-raised: #1c1b1c;
   --bg-sunken: #0e0e0f;
@@ -92,19 +85,29 @@
 :root[data-theme="dark"][data-accent="lavender"] { --accent: #c4b5fd; }
 :root[data-theme="dark"][data-accent="peach"]    { --accent: #ffb088; }
 
-/* ── page ───────────────────────────────────────────────────────── */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
+/* ── page ───────────────────────────────────────────────────────────
+   Everything here hangs off .blog-root rather than body or *.
+   Next keeps a route's stylesheet in the document after a client-side
+   navigation away from it, so global rules here would follow the reader back
+   onto the portfolio and restyle it until a hard refresh. Scoping to the
+   wrapper means the sheet can stay loaded and still affect nothing. */
+.blog-root {
+  min-height: 100vh;
   background: var(--bg);
   color: var(--prose);
   font-family: var(--body);
   -webkit-font-smoothing: antialiased;
+  /* scrollbars and form controls follow the theme, for this subtree only */
+  color-scheme: light;
+}
+:root[data-theme="dark"] .blog-root { color-scheme: dark; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .blog-root { color-scheme: dark; }
 }
 
-::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.blog-root ::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
 
-:focus-visible {
+.blog-root :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 3px;
