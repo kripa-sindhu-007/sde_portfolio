@@ -16,6 +16,10 @@ export type ExternalPost = {
   date: string;
   deck: string;
   topics: string[];
+  /** Lifted from the Medium RSS feed once. Static so the homepage does not have
+   *  to fetch the feed just to show a thumbnail. Re-run the extraction if a
+   *  cover changes upstream. */
+  thumbnail?: string;
 };
 
 export const externalPosts: ExternalPost[] = [
@@ -26,6 +30,7 @@ export const externalPosts: ExternalPost[] = [
     date: "2026-08-16",
     deck: "Leases, reapers and owner fencing — what it takes to survive kill -9 without losing work.",
     topics: ["distributed-systems", "go", "redis"],
+    thumbnail: "https://cdn-images-1.medium.com/max/1024/1*tHLpBdOGEEK-hiDDExRVyQ.png",
   },
   {
     title: "10 TypeScript Pitfalls That Look Correct (But Aren't)",
@@ -34,6 +39,7 @@ export const externalPosts: ExternalPost[] = [
     date: "2026-04-17",
     deck: "Type-level mistakes that compile cleanly and still bite you at runtime.",
     topics: ["typescript"],
+    thumbnail: "https://cdn-images-1.medium.com/max/1024/1*sIltMEX-Q7hk6rTyNW5fJw.png",
   },
   {
     title: "I Built a Distributed Task Queue From Scratch to Actually Understand How They Work",
@@ -42,5 +48,6 @@ export const externalPosts: ExternalPost[] = [
     date: "2026-03-04",
     deck: "Priority queues, retries and dead letters, built the slow way on purpose.",
     topics: ["distributed-systems", "go", "redis"],
+    thumbnail: "https://cdn-images-1.medium.com/max/1024/1*UaiLU7KeNJIUPx4HXIaDwg.png",
   },
 ];

@@ -39,6 +39,9 @@ function CardInner({ entry }: { entry: IndexEntry }) {
               height={628}
             />
           </>
+        ) : entry.thumbnail ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={entry.thumbnail} alt="" loading="lazy" />
         ) : (
           <span>{entry.platform ?? "note"}</span>
         )}

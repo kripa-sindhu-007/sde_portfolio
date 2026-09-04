@@ -13,23 +13,27 @@ const CARD =
 function CardBody({ entry }: { entry: IndexEntry }) {
   return (
     <>
-      {/* Thumbnail — the homepage is dark-only, so the dark cover always */}
+      {/* Thumbnail — the homepage is dark-only, so the dark cover always.
+          No terminal chrome here: it fights the artwork, which already has its
+          own composition. That device belongs to Featured Work. */}
       <div className="relative h-[180px] bg-surface-container-lowest/60 border-b border-outline-variant/6 overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 z-20 flex items-center gap-1.5 px-4 pt-3.5 pb-1 bg-gradient-to-b from-black/40 to-transparent">
-          <span className="w-2 h-2 rounded-full bg-error/50" />
-          <span className="w-2 h-2 rounded-full bg-tertiary/40" />
-          <span className="w-2 h-2 rounded-full bg-green-400/40" />
-          <span className="ml-2 font-mono text-[9px] text-on-surface-variant/50 tracking-wider">
-            {entry.kind === "external" ? `${entry.platform?.toLowerCase()}.link` : "post.mdx"}
-          </span>
-        </div>
-
         {entry.cover ? (
           <Image
             src={`${entry.cover}-dark.png`}
             alt=""
             width={1200}
             height={628}
+            className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500"
+          />
+        ) : entry.thumbnail ? (
+          /* Remote Medium image. Plain <img> on purpose: routing someone else's
+             CDN through next/image buys nothing here and spends transformations.
+             The parent box is a fixed height, so there is no layout shift. */
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={entry.thumbnail}
+            alt=""
+            loading="lazy"
             className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500"
           />
         ) : (

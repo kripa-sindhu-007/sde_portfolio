@@ -45,6 +45,8 @@ export type IndexEntry = {
   platform?: string;
   /** basename of the dual cover pair, e.g. /blog/<slug>/cover */
   cover?: string;
+  /** remote thumbnail for externally published pieces */
+  thumbnail?: string;
 };
 
 /** Native and external, merged and sorted — the index is the single home for
@@ -68,6 +70,7 @@ export function getIndexEntries(): IndexEntry[] {
     deck: e.deck,
     topics: e.topics,
     platform: e.platform,
+    thumbnail: e.thumbnail,
   }));
   return [...native, ...ext].sort((a, b) => (a.date < b.date ? 1 : -1));
 }
