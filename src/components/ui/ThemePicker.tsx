@@ -129,9 +129,7 @@ function clearPalette() {
 export default function ThemePicker() {
   const [open, setOpen] = useState(false);
   const [hex, setHex] = useState(DEFAULT_HEX);
-  const [input, setInput] = useState("");
   const wrapRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   // Load saved theme on mount
   useEffect(() => {
@@ -162,7 +160,6 @@ export default function ThemePicker() {
 
   const reset = useCallback(() => {
     setHex(DEFAULT_HEX);
-    setInput(DEFAULT_HEX);
     clearPalette();
     try {
       localStorage.removeItem("theme-primary");
@@ -190,11 +187,9 @@ export default function ThemePicker() {
     };
   }, [open]);
 
-  // Focus input when opened
+  // Reserved: focus handling when opened
   useEffect(() => {
     if (open) {
-      setInput(hex);
-      setTimeout(() => inputRef.current?.select(), 120);
     }
   }, [open, hex]);
 
@@ -236,42 +231,6 @@ export default function ThemePicker() {
             </div>
 
             <div className="p-3.5 space-y-3.5">
-              {/* Hex input */}
-              <form onSubmit={(e) => { e.preventDefault(); apply(input); }}>
-                <label className="font-mono text-[9px] text-on-surface-variant/30 tracking-wider uppercase block mb-1.5">
-                  $ set-primary
-                </label>
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 flex items-center gap-1.5 px-2.5 py-1.5 bg-surface-container-lowest/60 rounded-lg border border-outline-variant/8 focus-within:border-primary/25 transition-colors">
-                    <span className="font-mono text-[11px] text-on-surface-variant/30 select-none">
-                      #
-                    </span>
-                    <input
-                      ref={inputRef}
-                      type="text"
-                      maxLength={6}
-                      value={input.replace("#", "")}
-                      onChange={(e) => {
-                        const v = e.target.value
-                          .replace(/[^0-9a-fA-F]/g, "")
-                          .slice(0, 6);
-                        setInput(`#${v}`);
-                        if (v.length === 6) apply(`#${v}`);
-                      }}
-                      className="bg-transparent font-mono text-[12px] text-on-surface/80 tracking-wider w-full outline-none placeholder:text-on-surface-variant/20"
-                      placeholder="adc6ff"
-                      spellCheck={false}
-                      autoComplete="off"
-                    />
-                  </div>
-                  {/* Live color swatch */}
-                  <div
-                    className="w-7 h-7 rounded-lg border border-outline-variant/10 shrink-0 transition-colors duration-200"
-                    style={{ backgroundColor: hex }}
-                  />
-                </div>
-              </form>
-
               {/* Presets */}
               <div>
                 <span className="font-mono text-[8px] text-on-surface-variant/25 tracking-wider uppercase block mb-2">
@@ -283,7 +242,6 @@ export default function ThemePicker() {
                       key={preset.hex}
                       onClick={() => {
                         apply(preset.hex);
-                        setInput(preset.hex);
                       }}
                       title={preset.label}
                       className={`w-6 h-6 rounded-full border-2 transition-all duration-200 cursor-pointer hover:scale-110 active:scale-95 ${

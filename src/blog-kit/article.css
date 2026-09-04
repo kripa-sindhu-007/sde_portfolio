@@ -1,0 +1,260 @@
+/**
+ * Article + theme tokens for the blog.
+ * COPIED VERBATIM into sde_portfolio when the blog ships. Edit here, copy there.
+ *
+ * Token rule: light is the base on :root. Dark is applied three ways — by device
+ * preference, and by explicit choice in both directions. A colour must never be
+ * defined ONLY inside a media query, or the toggle works one way and not the other.
+ */
+
+/* ── light (base) ───────────────────────────────────────────────── */
+:root {
+  --bg: #faf9f7;
+  --bg-raised: #ffffff;
+  --bg-sunken: #f0eeea;
+  --ink: #16181d;
+  --prose: #2b3038;
+  --muted: #55606f;
+  --faint: #818b9c;
+  --rule: rgba(20, 26, 40, 0.14);
+  --rule-soft: rgba(20, 26, 40, 0.08);
+  --code-bg: #f5f4f1;
+  --accent: #0551ff;
+  --good: #0f7a37;
+  --bad: #c62828;
+  --shadow: 0 1px 3px rgba(16, 24, 40, 0.07);
+
+  --measure: 68ch;
+  --display: "Syne", sans-serif;
+  --body: "Outfit", system-ui, sans-serif;
+  --label: "Space Grotesk", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* accent presets — light values */
+:root[data-accent="rose"]     { --accent: #c9093b; }
+:root[data-accent="mint"]     { --accent: #147439; }
+:root[data-accent="gold"]     { --accent: #865e04; }
+:root[data-accent="lavender"] { --accent: #6239ff; }
+:root[data-accent="peach"]    { --accent: #b13b00; }
+
+/* ── dark ───────────────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131314;
+    --bg-raised: #1c1b1c;
+    --bg-sunken: #0e0e0f;
+    --ink: #e6e1e5;
+    --prose: #cdc9ce;
+    --muted: #948f94;
+    --faint: #6b6870;
+    --rule: rgba(255, 255, 255, 0.11);
+    --rule-soft: rgba(255, 255, 255, 0.06);
+    --code-bg: #0e0e0f;
+    --accent: #adc6ff;
+    --good: #4ade80;
+    --bad: #f87171;
+    --shadow: none;
+  }
+  :root:not([data-theme="light"])[data-accent="rose"]     { --accent: #f4a0b6; }
+  :root:not([data-theme="light"])[data-accent="mint"]     { --accent: #8ee4af; }
+  :root:not([data-theme="light"])[data-accent="gold"]     { --accent: #f0c566; }
+  :root:not([data-theme="light"])[data-accent="lavender"] { --accent: #c4b5fd; }
+  :root:not([data-theme="light"])[data-accent="peach"]    { --accent: #ffb088; }
+}
+
+:root[data-theme="dark"] {
+  --bg: #131314;
+  --bg-raised: #1c1b1c;
+  --bg-sunken: #0e0e0f;
+  --ink: #e6e1e5;
+  --prose: #cdc9ce;
+  --muted: #948f94;
+  --faint: #6b6870;
+  --rule: rgba(255, 255, 255, 0.11);
+  --rule-soft: rgba(255, 255, 255, 0.06);
+  --code-bg: #0e0e0f;
+  --accent: #adc6ff;
+  --good: #4ade80;
+  --bad: #f87171;
+  --shadow: none;
+}
+:root[data-theme="dark"][data-accent="rose"]     { --accent: #f4a0b6; }
+:root[data-theme="dark"][data-accent="mint"]     { --accent: #8ee4af; }
+:root[data-theme="dark"][data-accent="gold"]     { --accent: #f0c566; }
+:root[data-theme="dark"][data-accent="lavender"] { --accent: #c4b5fd; }
+:root[data-theme="dark"][data-accent="peach"]    { --accent: #ffb088; }
+
+/* ── page ───────────────────────────────────────────────────────────
+   Everything here hangs off .blog-root rather than body or *.
+   Next keeps a route's stylesheet in the document after a client-side
+   navigation away from it, so global rules here would follow the reader back
+   onto the portfolio and restyle it until a hard refresh. Scoping to the
+   wrapper means the sheet can stay loaded and still affect nothing. */
+.blog-root {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--prose);
+  font-family: var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The browser paints the canvas — overscroll, and the window/tab chrome — from
+   html/body, never from a wrapper div. Styling only .blog-root left the host
+   page's dark body showing around a light article.
+   :has() ties these to the presence of a blog page in the DOM, so they apply
+   while one is mounted and stop the instant the reader navigates away. That
+   keeps the isolation without leaving the canvas mismatched. */
+body:has(.blog-root) { background: var(--bg); }
+
+:root:has(.blog-root) { color-scheme: light; }
+:root[data-theme="dark"]:has(.blog-root) { color-scheme: dark; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):has(.blog-root) { color-scheme: dark; }
+}
+
+.blog-root ::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+
+.blog-root :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.wrap { max-width: var(--measure); margin: 0 auto; padding: 0 24px; }
+
+/* ── article header ─────────────────────────────────────────────── */
+.post-head { padding: 60px 0 0; }
+.eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--faint);
+}
+.post-head h1 {
+  margin-top: 16px; font-family: var(--display); font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.06;
+  font-size: clamp(2.1rem, 4.6vw, 3.05rem); color: var(--ink);
+}
+.deck { margin-top: 18px; font-size: 20px; line-height: 1.55; color: var(--muted); }
+.byline {
+  margin-top: 26px; padding-bottom: 26px; border-bottom: 1px solid var(--rule);
+  display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 11.5px; color: var(--faint);
+}
+.byline .tag { color: var(--accent); }
+.byline .sep { opacity: 0.4; }
+
+/* ── prose ──────────────────────────────────────────────────────── */
+.prose { padding-top: 34px; }
+.prose > p { font-size: 19px; line-height: 1.75; margin: 0 0 26px; }
+.prose > p:first-of-type { font-size: 20.5px; color: var(--ink); }
+.prose h2 {
+  margin: 52px 0 18px; font-family: var(--body); font-weight: 600;
+  font-size: 23px; letter-spacing: -0.012em; color: var(--ink); line-height: 1.3;
+}
+.prose h3 {
+  margin: 36px 0 14px; font-family: var(--body); font-weight: 600;
+  font-size: 19px; color: var(--ink);
+}
+.prose strong { color: var(--ink); font-weight: 600; }
+.prose a {
+  color: var(--accent); text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+}
+.prose a:hover { border-bottom-color: var(--accent); }
+
+.prose :not(pre) > code {
+  font-family: var(--mono); font-size: 0.87em; color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  padding: 2px 6px; border-radius: 4px;
+}
+
+.prose ul, .prose ol { margin: 0 0 26px; padding: 0; list-style: none; }
+.prose li { position: relative; padding-left: 24px; font-size: 19px; line-height: 1.72; margin-bottom: 12px; }
+.prose ul > li::before {
+  content: ""; position: absolute; left: 4px; top: 0.72em;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--accent); opacity: 0.75;
+}
+.prose ol { counter-reset: li; }
+.prose ol > li { counter-increment: li; }
+.prose ol > li::before {
+  content: counter(li); position: absolute; left: 0; top: 0;
+  font-family: var(--mono); font-size: 13px; color: var(--accent);
+}
+
+/* ── figures — break out past the measure ───────────────────────── */
+.prose figure { margin: 40px calc(50% - 50vw); padding: 0 24px; max-width: 100vw; }
+.prose figure .figure-inner { max-width: 1000px; margin: 0 auto; }
+/* explicit aspect box: images must never shift layout on load (D10) */
+.prose figure img {
+  display: block; width: 100%; height: auto; border-radius: 10px;
+  border: 1px solid var(--rule); background: var(--bg-raised);
+}
+.prose figcaption {
+  margin-top: 12px; text-align: center; font-family: var(--mono);
+  font-size: 11.5px; color: var(--faint); line-height: 1.6;
+}
+/* Dual covers: show the one matching the active theme, swapped in CSS so there
+   is no flash and no JS involved.
+   NOTE the `.prose figure img` qualifier on every rule — without it these lose
+   to `.prose figure img { display: block }` above on specificity, and BOTH
+   covers render. */
+.prose figure img.fig-dark { display: none; }
+:root[data-theme="dark"] .prose figure img.fig-dark { display: block; }
+:root[data-theme="dark"] .prose figure img.fig-light { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .prose figure img.fig-dark { display: block; }
+  :root:not([data-theme="light"]) .prose figure img.fig-light { display: none; }
+}
+
+/* ── aside ──────────────────────────────────────────────────────── */
+.prose .aside {
+  margin: 34px 0; padding: 4px 0 4px 22px;
+  border-left: 2px solid color-mix(in srgb, var(--accent) 55%, transparent);
+}
+.prose .aside p { font-size: 18px; line-height: 1.7; color: var(--muted); margin: 0; }
+
+/* ── table ──────────────────────────────────────────────────────── */
+.prose .table-scroll { overflow-x: auto; margin: 32px 0; }
+.prose table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 13.5px; }
+.prose th {
+  text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--rule);
+  font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--faint); font-weight: 500; white-space: nowrap;
+}
+.prose td { padding: 10px; border-bottom: 1px solid var(--rule-soft); }
+
+/* ── code blocks (rehype-pretty-code dual theme) ────────────────── */
+.prose figure[data-rehype-pretty-code-figure] { margin: 32px 0; padding: 0; max-width: none; }
+.prose [data-rehype-pretty-code-title] {
+  font-family: var(--mono); font-size: 11px; color: var(--faint);
+  background: var(--code-bg); border: 1px solid var(--rule);
+  border-bottom: 0; border-radius: 10px 10px 0 0; padding: 10px 16px;
+}
+.prose pre {
+  background: var(--code-bg); border: 1px solid var(--rule);
+  border-radius: 10px; overflow-x: auto; margin: 0;
+}
+.prose [data-rehype-pretty-code-title] + pre { border-radius: 0 0 10px 10px; }
+.prose pre > code {
+  display: grid; padding: 16px 0; font-family: var(--mono);
+  font-size: 13.5px; line-height: 1.75; background: none;
+}
+.prose pre > code > [data-line] { padding: 0 16px; }
+.prose pre > code > [data-highlighted-line] {
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+/* shiki dual theme: light values inline, dark swapped by variable */
+.prose code[data-theme*=" "] span { color: var(--shiki-light); }
+:root[data-theme="dark"] .prose code[data-theme*=" "] span { color: var(--shiki-dark); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .prose code[data-theme*=" "] span { color: var(--shiki-dark); }
+}
+
+/* ── footer ─────────────────────────────────────────────────────── */
+.post-foot { padding: 0 0 90px; }
+.post-foot .rule { height: 1px; background: var(--rule); margin: 44px 0 26px; }
+.xp { display: flex; flex-direction: column; gap: 11px; font-family: var(--mono); font-size: 12.5px; }
+.xp a { color: var(--muted); text-decoration: none; }
+.xp a:hover { color: var(--accent); }

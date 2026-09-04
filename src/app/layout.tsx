@@ -9,6 +9,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { SITE_URL } from "@/lib/site";
+import { themeInitScript } from "@/blog-kit/theme";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -93,11 +94,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // suppressHydrationWarning: the blog's theme script sets data-theme and
+    // colorScheme on <html> before React hydrates. That mismatch is deliberate.
     <html
+      suppressHydrationWarning
       lang="en"
       className={`${outfit.variable} ${syne.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} dark`}
     >
       <head>
+        {/* Mirrors the reader's stored blog theme onto <html> before first paint.
+            Must be parser-inserted here — a script rendered inside a component
+            never executes. Harmless off /blog: nothing there reads these. */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

@@ -1,0 +1,121 @@
+/* Blog chrome — the index and the shared bar. Article styling lives in blog-kit. */
+
+.blog-root .blog-bar {
+  position: sticky; top: 0; z-index: 30;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule-soft);
+}
+.blog-root .blog-bar .in {
+  max-width: 1000px; margin: 0 auto; padding: 13px 24px;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+}
+.blog-root .blog-bar a.home { font-family: var(--mono); font-size: 11.5px; color: var(--muted); text-decoration: none; }
+.blog-root .blog-bar a.home:hover { color: var(--accent); }
+
+.blog-root .tt { display: flex; align-items: center; gap: 12px; }
+.blog-root .tt-mode {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); background: var(--bg-raised); border: 1px solid var(--rule);
+  padding: 5px 10px; border-radius: 6px; cursor: pointer; min-width: 62px;
+}
+.blog-root .tt-accents { display: flex; gap: 6px; }
+.blog-root .tt-accents button { width: 15px; height: 15px; border-radius: 50%; border: 1px solid var(--rule); cursor: pointer; }
+.blog-root .tt-accents button.on { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* index */
+.blog-root .idx { max-width: 1000px; margin: 0 auto; padding: 64px 24px 110px; }
+.blog-root .idx .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+.blog-root .idx h1 {
+  margin-top: 14px; font-family: var(--display); font-size: clamp(2.2rem, 5vw, 3rem);
+  font-weight: 800; color: var(--ink); letter-spacing: -.03em; line-height: 1.05;
+}
+.blog-root .idx .sub { margin-top: 14px; color: var(--muted); font-size: 17px; line-height: 1.55; max-width: 58ch; }
+.blog-root .idx .filters { margin: 30px 0 26px; display: flex; flex-wrap: wrap; gap: 8px; }
+.blog-root .idx .filters button {
+  font-family: var(--mono); font-size: 11px; color: var(--muted); cursor: pointer;
+  background: var(--bg-raised); border: 1px solid var(--rule); padding: 5px 11px; border-radius: 999px;
+  transition: color .18s, border-color .18s;
+}
+.blog-root .idx .filters button:hover { color: var(--ink); }
+.blog-root .idx .filters button.on { color: var(--accent); border-color: var(--accent); }
+
+.blog-root .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+
+.blog-root .card {
+  display: flex; flex-direction: column; text-decoration: none; color: inherit;
+  background: var(--bg-raised); border: 1px solid var(--rule); border-radius: 12px;
+  overflow: hidden; box-shadow: var(--shadow);
+  transition: border-color .2s, transform .2s;
+}
+.blog-root .card:hover { border-color: color-mix(in srgb, var(--accent) 55%, transparent); transform: translateY(-2px); }
+.blog-root .card:hover .c-title { color: var(--accent); }
+
+/* Thumb is a fixed ratio box so nothing reflows when the image lands (D10).
+   The image MUST be absolutely positioned: in normal flow its intrinsic height
+   wins over aspect-ratio, and a portrait source (a 1024x1151 Medium cover)
+   stretches its card to twice the height of its neighbours. */
+.blog-root .c-thumb {
+  position: relative; aspect-ratio: 1200 / 628; overflow: hidden;
+  background: var(--bg-sunken); border-bottom: 1px solid var(--rule);
+}
+/* Remote thumbnails (Medium, dev.to) cannot have a precomputed blur, so the box
+   breathes while they load instead of sitting blank. The image paints over it. */
+.blog-root .c-thumb::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(100deg,
+    transparent 20%,
+    color-mix(in srgb, var(--accent) 7%, transparent) 50%,
+    transparent 80%);
+  background-size: 220% 100%;
+  animation: thumb-shimmer 1.6s ease-in-out infinite;
+}
+@keyframes thumb-shimmer {
+  from { background-position: 120% 0; }
+  to   { background-position: -60% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blog-root .c-thumb::before { animation: none; }
+}
+.blog-root .c-thumb img {
+  position: absolute; inset: 0;
+  display: block; width: 100%; height: 100%; object-fit: cover;
+}
+.blog-root .c-thumb img.fig-dark { display: none; }
+:root[data-theme="dark"] .c-thumb img.fig-dark { display: block; }
+:root[data-theme="dark"] .c-thumb img.fig-light { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .c-thumb img.fig-dark { display: block; }
+  :root:not([data-theme="light"]) .c-thumb img.fig-light { display: none; }
+}
+/* external entries have no cover of ours — a quiet monogram instead of a hole */
+.blog-root .c-thumb.none { display: grid; place-items: center; }
+.blog-root .c-thumb.none span {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--faint);
+}
+
+.blog-root .c-body { padding: 18px 18px 20px; display: flex; flex-direction: column; flex: 1; }
+.blog-root .c-meta { font-family: var(--mono); font-size: 10.5px; color: var(--faint); display: flex; gap: 9px; flex-wrap: wrap; align-items: center; }
+.blog-root .c-title { margin-top: 10px; font-size: 19px; font-weight: 600; color: var(--ink); letter-spacing: -.015em; line-height: 1.32; transition: color .18s; }
+.blog-root .c-deck { margin-top: 8px; color: var(--muted); font-size: 14.5px; line-height: 1.55; flex: 1; }
+.blog-root .c-tags { margin-top: 14px; display: flex; gap: 7px; flex-wrap: wrap; font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
+.blog-root .c-off {
+  font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  padding: 3px 7px; border-radius: 4px;
+}
+
+/* article shell */
+.blog-root .post-nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+
+/* article footer */
+.blog-root .xp a.chan { color: var(--accent); }
+.blog-root .neighbours { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 30px; }
+.blog-root .nb {
+  display: block; text-decoration: none; padding: 16px 18px;
+  border: 1px solid var(--rule); border-radius: 10px; background: var(--bg-raised);
+}
+.blog-root .nb:hover { border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
+.blog-root .nb .l { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+.blog-root .nb .t { margin-top: 7px; font-size: 16px; color: var(--ink); font-weight: 500; line-height: 1.35; }
+.blog-root .nb.next { text-align: right; }
+@media (max-width: 640px) { .blog-root .neighbours { grid-template-columns: 1fr; } }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
+import type { GitHubStats } from "@/lib/github";
 
 const GITHUB_USERNAME = "kripa-sindhu-007";
 
@@ -116,11 +117,6 @@ function TerminalTyper() {
   );
 }
 
-interface GitHubStats {
-  repos: number;
-  commits: number;
-  languages: number;
-}
 
 const fadeIn = {
   hidden: { opacity: 0, scale: 0.95 },
@@ -154,53 +150,13 @@ function AnimatedNumber({ value, delay = 0 }: { value: number; delay?: number })
   return <>{display.toLocaleString()}</>;
 }
 
-export default function GitHubCard() {
-  const [stats, setStats] = useState<GitHubStats>({
-    repos: 0,
-    commits: 0,
-    languages: 0,
-  });
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    async function fetchStats() {
-      try {
-        const [userRes, commitsRes, reposRes] = await Promise.all([
-          fetch(`https://api.github.com/users/${GITHUB_USERNAME}`),
-          fetch(
-            `https://api.github.com/search/commits?q=author:${GITHUB_USERNAME}&per_page=1`,
-            { headers: { Accept: "application/vnd.github.cloak-preview+json" } }
-          ),
-          fetch(
-            `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`
-          ),
-        ]);
-
-        const userData = await userRes.json();
-        const commitData = await commitsRes.json();
-        const reposData = await reposRes.json();
-
-        const langs = new Set<string>();
-        if (Array.isArray(reposData)) {
-          reposData.forEach((repo: { language?: string }) => {
-            if (repo.language) langs.add(repo.language);
-          });
-        }
-
-        setStats({
-          repos: userData.public_repos ?? 0,
-          commits: commitData.total_count ?? 0,
-          languages: langs.size || 0,
-        });
-        setLoaded(true);
-      } catch {
-        setStats({ repos: 39, commits: 1171, languages: 11 });
-        setLoaded(true);
-      }
-    }
-
-    fetchStats();
-  }, []);
+/**
+ * Presentational only. Stats are fetched on the server (see lib/github.ts) and
+ * passed in — the browser used to make three unauthenticated GitHub calls per
+ * visit, against a 60/hour-per-IP limit shared by every visitor.
+ */
+export default function GitHubCard({ stats }: { stats: GitHubStats }) {
+  const loaded = true;
 
   const commitPercent = Math.min((stats.commits / 1500) * 100, 95);
 
@@ -299,6 +255,35 @@ export default function GitHubCard() {
               </span>
               <span className="font-headline font-bold text-xl tracking-tight">
                 {loaded ? <AnimatedNumber value={stats.languages} delay={1600} /> : "--"}
+              </span>
+            </div>
+          </div>
+
+          {/* Second row. Kept to three columns so the tiles stay on one line —
+              the grid is 390px wide at the card's size. */}
+          <div className="grid grid-cols-3 gap-3">
+            <div className="p-3 bg-surface-container-lowest/50 rounded-lg border border-outline-variant/5">
+              <span className="block font-mono text-[8px] text-on-surface-variant/50 uppercase mb-1.5 tracking-wider">
+                Stars
+              </span>
+              <span className="font-headline font-bold text-xl tracking-tight">
+                {loaded ? <AnimatedNumber value={stats.stars} delay={1800} /> : "--"}
+              </span>
+            </div>
+            <div className="p-3 bg-surface-container-lowest/50 rounded-lg border border-outline-variant/5">
+              <span className="block font-mono text-[8px] text-on-surface-variant/50 uppercase mb-1.5 tracking-wider">
+                Years
+              </span>
+              <span className="font-headline font-bold text-xl tracking-tight">
+                {loaded ? <AnimatedNumber value={stats.yearsOnGitHub} delay={2000} /> : "--"}
+              </span>
+            </div>
+            <div className="p-3 bg-surface-container-lowest/50 rounded-lg border border-outline-variant/5">
+              <span className="block font-mono text-[8px] text-on-surface-variant/50 uppercase mb-1.5 tracking-wider">
+                Top lang
+              </span>
+              <span className="font-headline font-bold text-base tracking-tight">
+                {stats.languageNames.includes("Go") ? "Go" : (stats.languageNames[0] ?? "—")}
               </span>
             </div>
           </div>
