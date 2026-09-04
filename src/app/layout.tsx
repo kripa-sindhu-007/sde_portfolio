@@ -93,7 +93,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // suppressHydrationWarning: the blog's theme script sets data-theme and
+    // colorScheme on <html> before React hydrates. That mismatch is deliberate.
     <html
+      suppressHydrationWarning
       lang="en"
       className={`${outfit.variable} ${syne.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} dark`}
     >
