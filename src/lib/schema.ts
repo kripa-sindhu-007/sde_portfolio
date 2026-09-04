@@ -126,7 +126,7 @@ export function articleSchema({
   body: string;
 }) {
   const url = `${SITE_URL}/blog/${slug}`;
-  const published = toISODate(fm.created);
+  const published = isoDateTime(fm.created);
 
   return {
     "@context": "https://schema.org",
@@ -159,6 +159,20 @@ export function articleSchema({
       ]),
     ],
   };
+}
+
+/**
+ * Frontmatter carries a date, but schema.org's Date/DateTime wants ISO 8601
+ * with a zone — Google's Rich Results Test flags a bare "2026-09-04" as an
+ * invalid datetime missing a time zone.
+ *
+ * Midnight UTC, not midnight IST. The site renders every visible date with
+ * timeZone: "UTC" (see frontmatter.ts), so +05:30 would stamp the 4th as
+ * 2026-09-03T18:30Z and structured data would disagree with the byline — the
+ * exact off-by-one that helper exists to prevent.
+ */
+export function isoDateTime(value: string | Date): string {
+  return `${toISODate(value)}T00:00:00Z`;
 }
 
 /** The last crumb carries no `item` — it is the current page, and pointing a
