@@ -84,7 +84,7 @@ export default function BlogIndex() {
 
         <Filters topics={topics} />
 
-        <div id="entries" className="grid">
+        <div id="entries" className="blog-grid">
           {entries.map((entry) =>
             entry.kind === "native" ? (
               <Link
