@@ -108,7 +108,7 @@ export const projects: Project[] = [
       "Published to npm with signed provenance, zero-dependency import, >97% coverage",
     ],
     githubUrl: "https://github.com/kripa-sindhu-007/prahari",
-    liveUrl: "https://prahari-azure.vercel.app",
+    liveUrl: "https://prahari.kripasindhu.dev",
     category: "Open Source / Developer Tooling",
     icon: "shield",
     codePreview: [
