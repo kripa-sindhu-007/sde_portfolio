@@ -104,20 +104,31 @@ export default function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        {/* Material Symbols — loaded non-render-blocking via media swap.
-            suppressHydrationWarning: the inline script below flips media to
-            "all" before React hydrates, which would otherwise cause a mismatch. */}
+        {/* Material Symbols, subsetted to the icons we actually use via icon_names,
+            with the axes pinned to single values. The unsubsetted full-axis font is
+            1.1 MB; this is ~7 KB. ADDING A NEW ICON MEANS ADDING IT TO icon_names IN
+            BOTH URLS BELOW, or it renders as its ligature text.
+            Still loaded non-render-blocking via the media swap; suppressHydrationWarning
+            because the inline script flips media to "all" before React hydrates. */}
+        {/* eslint-disable-next-line @next/next/google-font-display -- display=block is
+            correct for an icon font: with swap the browser paints the ligature text
+            ("arrow_forward") before the font arrives, which both looks broken and
+            shifts layout. The subsetted font is ~7 KB, so the block period is tiny. */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=add_circle,arrow_back,arrow_forward,arrow_outward,article,auto_stories,bug_report,build,check_circle,close,code,code_blocks,content_copy,dashboard_customize,data_object,deployed_code,description,dns,download,emoji_events,flag,folder_special,hub,location_on,mail,menu_book,military_tech,neurology,open_in_full,open_in_new,palette,person,route,rss_feed,schedule,school,shield,speed,stacks,storage,swipe_left,terminal,travel_explore,undo,volume_up,work,work_history&display=block"
           media="print"
           data-media="all"
           suppressHydrationWarning
         />
         <noscript>
+        {/* eslint-disable-next-line @next/next/google-font-display -- display=block is
+            correct for an icon font: with swap the browser paints the ligature text
+            ("arrow_forward") before the font arrives, which both looks broken and
+            shifts layout. The subsetted font is ~7 KB, so the block period is tiny. */}
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=add_circle,arrow_back,arrow_forward,arrow_outward,article,auto_stories,bug_report,build,check_circle,close,code,code_blocks,content_copy,dashboard_customize,data_object,deployed_code,description,dns,download,emoji_events,flag,folder_special,hub,location_on,mail,menu_book,military_tech,neurology,open_in_full,open_in_new,palette,person,route,rss_feed,schedule,school,shield,speed,stacks,storage,swipe_left,terminal,travel_explore,undo,volume_up,work,work_history&display=block"
           />
         </noscript>
       </head>

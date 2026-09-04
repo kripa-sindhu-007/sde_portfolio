@@ -13,8 +13,8 @@ const BOOT_LINES = [
   { text: "[status]  all systems operational ✓", delay: 1050 },
 ];
 
-const TOTAL_DURATION = 2800;
-const PROGRESS_DURATION = 1800;
+const TOTAL_DURATION = 1100;
+const PROGRESS_DURATION = 700;
 const SESSION_KEY = "ks_boot_seen";
 
 export default function BootScreen() {
