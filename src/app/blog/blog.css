@@ -58,6 +58,24 @@
   position: relative; aspect-ratio: 1200 / 628; overflow: hidden;
   background: var(--bg-sunken); border-bottom: 1px solid var(--rule);
 }
+/* Remote thumbnails (Medium, dev.to) cannot have a precomputed blur, so the box
+   breathes while they load instead of sitting blank. The image paints over it. */
+.c-thumb::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(100deg,
+    transparent 20%,
+    color-mix(in srgb, var(--accent) 7%, transparent) 50%,
+    transparent 80%);
+  background-size: 220% 100%;
+  animation: thumb-shimmer 1.6s ease-in-out infinite;
+}
+@keyframes thumb-shimmer {
+  from { background-position: 120% 0; }
+  to   { background-position: -60% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .c-thumb::before { animation: none; }
+}
 .c-thumb img {
   position: absolute; inset: 0;
   display: block; width: 100%; height: 100%; object-fit: cover;

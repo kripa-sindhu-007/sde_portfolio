@@ -88,29 +88,35 @@ export default async function Article({ params }: { params: Promise<{ slug: stri
                 {channel}
               </span>
             ))}
-            <a href="/blog/rss.xml">Subscribe via RSS</a>
+            <a href="/blog/rss.xml">Subscribe via RSS feed</a>
           </div>
 
-          {(prev || next) && (
-            <div className="neighbours">
-              {prev ? (
-                <Link className="nb" href={`/blog/${prev.slug}`}>
-                  <div className="l">← Previous</div>
-                  <div className="t">{prev.fm.title}</div>
-                </Link>
-              ) : (
-                <span />
-              )}
-              {next ? (
-                <Link className="nb next" href={`/blog/${next.slug}`}>
-                  <div className="l">Next →</div>
-                  <div className="t">{next.fm.title}</div>
-                </Link>
-              ) : (
-                <span />
-              )}
-            </div>
-          )}
+          {/* Always present, so the article never dead-ends. With a single post
+              there are no neighbours, so both slots fall back to the index. */}
+          <div className="neighbours">
+            {prev ? (
+              <Link className="nb" href={`/blog/${prev.slug}`}>
+                <div className="l">← Previous</div>
+                <div className="t">{prev.fm.title}</div>
+              </Link>
+            ) : (
+              <Link className="nb" href="/blog">
+                <div className="l">← Index</div>
+                <div className="t">All writing</div>
+              </Link>
+            )}
+            {next ? (
+              <Link className="nb next" href={`/blog/${next.slug}`}>
+                <div className="l">Next →</div>
+                <div className="t">{next.fm.title}</div>
+              </Link>
+            ) : (
+              <Link className="nb next" href="/blog">
+                <div className="l">More →</div>
+                <div className="t">Everything I have written</div>
+              </Link>
+            )}
+          </div>
         </footer>
       </div>
     </>

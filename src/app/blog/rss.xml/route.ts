@@ -3,7 +3,10 @@ import { SITE_URL } from "@/lib/site";
 import { toISODate } from "@/blog-kit/lib/frontmatter";
 
 /** Native posts only. A feed emitting items that point at another domain is not
- *  what someone subscribes for. */
+ *  what someone subscribes for.
+ *
+ *  The xml-stylesheet reference makes a browser render /rss.xsl instead of raw
+ *  markup — feed readers ignore it, humans get a readable page. */
 export async function GET() {
   const posts = getPosts();
   const esc = (s: string) =>
@@ -24,6 +27,7 @@ export async function GET() {
     .join("\n");
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/rss.xsl"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Kripa Sindhu — Writing</title>
