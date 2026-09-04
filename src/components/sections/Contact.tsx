@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { SiGithub } from "react-icons/si";
 import { FaLinkedinIn } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 const socials = [
   {
@@ -22,9 +23,9 @@ const socials = [
   },
   {
     label: "Email",
-    href: "mailto:sindhukripa007@gmail.com",
+    href: `mailto:${CONTACT_EMAIL}`,
     icon: HiOutlineMail,
-    handle: "sindhukripa007@gmail.com",
+    handle: CONTACT_EMAIL,
     description: "Direct communication",
   },
 ];

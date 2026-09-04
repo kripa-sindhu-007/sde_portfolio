@@ -10,3 +10,5 @@ export const SITE_HOST = (() => {
     return SITE_URL.replace(/^https?:\/\//, "").replace(/\/$/, "");
   }
 })();
+
+export const CONTACT_EMAIL = "mail@kripasindhu.dev";

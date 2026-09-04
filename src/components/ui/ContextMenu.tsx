@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { RESUME_URL } from "@/lib/resume";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 interface MenuItem {
   label: string;
@@ -30,7 +31,7 @@ export default function ContextMenu() {
       icon: "content_copy",
       hint: "clipboard",
       action: () => {
-        navigator.clipboard.writeText("sindhukripa007@gmail.com");
+        navigator.clipboard.writeText(CONTACT_EMAIL);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       },
@@ -47,7 +48,7 @@ export default function ContextMenu() {
       hint: "mailto",
       action: () =>
         window.open(
-          "mailto:sindhukripa007@gmail.com?subject=Portfolio%20Bug%20Report",
+          `mailto:${CONTACT_EMAIL}?subject=Portfolio%20Bug%20Report`,
           "_blank"
         ),
     },
