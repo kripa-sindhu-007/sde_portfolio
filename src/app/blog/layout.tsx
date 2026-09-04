@@ -1,4 +1,3 @@
-import { themeInitScript } from "@/blog-kit/theme";
 import "@/blog-kit/article.css";
 import "./blog.css";
 
@@ -8,14 +7,14 @@ import "./blog.css";
  * separate redesign.
  *
  * article.css is imported here rather than in the root layout so it only loads
- * on /blog routes and cannot touch the portfolio's tokens.
+ * on /blog routes and cannot touch the portfolio's tokens. That scoping also
+ * carries `color-scheme`, so the portfolio keeps its dark scrollbars.
+ *
+ * The anti-flash script lives in the ROOT layout's <head>: a <script> returned
+ * from a component is DOM-inserted, and browsers never execute those.
  */
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      {/* blocking, before first paint — otherwise the wrong theme flashes */}
-      <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      <div className="blog-root">{children}</div>
-    </>
+    <div className="blog-root">{children}</div>
   );
 }

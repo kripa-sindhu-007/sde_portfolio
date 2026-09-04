@@ -6,11 +6,13 @@ import { motion, AnimatePresence } from "motion/react";
 import ThemePicker from "@/components/ui/ThemePicker";
 import { RESUME_URL } from "@/lib/resume";
 
+// Order mirrors the section order in app/page.tsx. The scroll spy walks this
+// array against each section's offsetTop, so the two must stay in step.
 const navLinks = [
-  { label: "Experience", href: "#experience", icon: "work_history" },
   { label: "Projects", href: "#projects", icon: "folder_special" },
+  { label: "Writing", href: "#writing", icon: "article" },
+  { label: "Experience", href: "#experience", icon: "work_history" },
   { label: "Publications", href: "#publications", icon: "menu_book" },
-  { label: "Articles", href: "#articles", icon: "article" },
   { label: "Skills", href: "#skills", icon: "code" },
   { label: "Achievements", href: "#achievements", icon: "emoji_events" },
   { label: "Contact", href: "#contact", icon: "mail" },

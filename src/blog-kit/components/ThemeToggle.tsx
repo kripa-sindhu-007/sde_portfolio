@@ -48,12 +48,9 @@ export function ThemeToggle() {
   function applyTheme(next: ThemeChoice) {
     localStorage.setItem(THEME_STORAGE_KEY, next);
     const root = document.documentElement;
+    // color-scheme follows from CSS, so only the attribute is set here
     if (next === "system") root.removeAttribute("data-theme");
     else root.setAttribute("data-theme", next);
-    const dark =
-      next === "dark" ||
-      (next === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
-    root.style.colorScheme = dark ? "dark" : "light";
     emit();
   }
 

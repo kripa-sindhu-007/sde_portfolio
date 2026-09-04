@@ -116,6 +116,12 @@ export default function Hero() {
           <p className="text-[clamp(1.4rem,3.5vw,3.2rem)] font-headline font-bold tracking-[-0.02em] text-on-surface/85 leading-[1.2]">
             Software Engineer
           </p>
+          {/* Experience now sits below the work, so the employment signal has to
+              live here — it is what a recruiter looks for in the first screen. */}
+          <p className="mt-2 font-mono text-[11px] sm:text-[12px] tracking-[0.06em] text-on-surface-variant/45">
+            @ BeatRoute <span className="text-on-surface-variant/25">·</span> 2025 — present
+            <span className="text-on-surface-variant/25"> · </span>Gurugram, India
+          </p>
           <p className="text-[clamp(1.2rem,2.8vw,2.6rem)] font-headline font-semibold tracking-[-0.01em] text-on-surface/55 leading-[1.2] mt-1">
             crafting scalable
             <motion.span

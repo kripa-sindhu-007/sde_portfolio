@@ -30,26 +30,25 @@ export const DEFAULT_ACCENT: AccentId = "blue";
 export const ACCENT_STORAGE_KEY = "blog-accent";
 
 /**
- * Runs before first paint, blocking, in <head>.
+ * Runs before first paint, blocking, in the ROOT layout's <head>.
  *
- * Without this a reader whose stored choice differs from their device gets a
- * full-page flash of the wrong theme on every navigation. It also sets
- * color-scheme so native scrollbars and form controls match immediately.
+ * It must be in <head> rendered by the server: a <script> returned from inside a
+ * component is set via the DOM, and the browser never executes DOM-inserted
+ * scripts — so it would silently do nothing on client-side navigation.
  *
- * Deliberately dependency-free and tiny — it is inlined, so every byte is
- * render-blocking.
+ * All it does is mirror the stored choice onto <html> before paint, because CSS
+ * cannot read localStorage. `color-scheme` is handled in article.css instead,
+ * which keeps it scoped to /blog automatically.
+ *
+ * Safe to run site-wide: the portfolio's CSS never reads these attributes.
  */
 export const themeInitScript = `
 (function(){
   try{
-    var t = localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)}) || "system";
-    var dark = t === "dark" || (t === "system" &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches);
-    var r = document.documentElement;
-    if (t !== "system") r.setAttribute("data-theme", t);
-    r.style.colorScheme = dark ? "dark" : "light";
+    var t = localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)});
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
     var a = localStorage.getItem(${JSON.stringify(ACCENT_STORAGE_KEY)});
-    if (a) r.setAttribute("data-accent", a);
+    if (a) document.documentElement.setAttribute("data-accent", a);
   }catch(e){}
 })();
 `.trim();

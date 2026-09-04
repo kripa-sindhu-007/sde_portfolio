@@ -9,6 +9,11 @@
 
 /* ── light (base) ───────────────────────────────────────────────── */
 :root {
+  /* native scrollbars, form controls and the canvas follow the theme. Declared
+     in CSS rather than set from JS so it is scoped to wherever this stylesheet
+     loads — which is /blog only. */
+  color-scheme: light;
+
   --bg: #faf9f7;
   --bg-raised: #ffffff;
   --bg-sunken: #f0eeea;
@@ -41,6 +46,7 @@
 /* ── dark ───────────────────────────────────────────────────────── */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    color-scheme: dark;
     --bg: #131314;
     --bg-raised: #1c1b1c;
     --bg-sunken: #0e0e0f;
@@ -64,6 +70,7 @@
 }
 
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --bg: #131314;
   --bg-raised: #1c1b1c;
   --bg-sunken: #0e0e0f;
