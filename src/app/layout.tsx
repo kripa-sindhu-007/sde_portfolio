@@ -8,6 +8,7 @@ import {
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -37,9 +38,7 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  "https://sde-portfolio-lemon-phi.vercel.app";
+const siteUrl = SITE_URL;
 
 const title = "Kripa Sindhu — Software Engineer";
 const description =

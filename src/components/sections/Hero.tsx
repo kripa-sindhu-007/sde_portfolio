@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import GitHubCard from "@/components/ui/GitHubCard";
+import { RESUME_UPDATED, RESUME_URL } from "@/lib/resume";
 
 const stagger = {
   hidden: {},
@@ -165,7 +166,7 @@ export default function Hero() {
         {/* Resume — terminal file card */}
         <motion.div variants={fadeUp}>
           <a
-            href="/Kripa_Sindhu_SDE1.pdf"
+            href={RESUME_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="group relative inline-flex items-center gap-4 pl-4 pr-5 py-3 rounded-xl border border-outline-variant/10 bg-surface-container-low/40 backdrop-blur-sm hover:border-primary/25 hover:bg-surface-container-low/70 transition-all duration-400 cursor-pointer active:scale-[0.98] overflow-hidden"
@@ -190,7 +191,7 @@ export default function Hero() {
                 Kripa_Sindhu_Resume
               </span>
               <span className="font-mono text-[10px] text-on-surface-variant/35 tracking-wider mt-0.5">
-                PDF &middot; Updated 2026
+                PDF &middot; Updated {RESUME_UPDATED}
               </span>
             </div>
 

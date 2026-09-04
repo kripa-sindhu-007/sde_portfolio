@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { RESUME_URL } from "@/lib/resume";
 
 interface MenuItem {
   label: string;
@@ -38,7 +39,7 @@ export default function ContextMenu() {
       label: "Download Resume",
       icon: "download",
       hint: "PDF",
-      action: () => window.open("/Kripa_Sindhu_SDE1.pdf", "_blank"),
+      action: () => window.open(RESUME_URL, "_blank"),
     },
     {
       label: "Report Bug",
