@@ -115,12 +115,11 @@ export default function Hero() {
         <motion.div variants={fadeUp} className="mb-8">
           <p className="text-[clamp(1.4rem,3.5vw,3.2rem)] font-headline font-bold tracking-[-0.02em] text-on-surface/85 leading-[1.2]">
             Software Engineer
-          </p>
-          {/* Experience now sits below the work, so the employment signal has to
-              live here — it is what a recruiter looks for in the first screen. */}
-          <p className="mt-2 font-mono text-[11px] sm:text-[12px] tracking-[0.06em] text-on-surface-variant/45">
-            @ BeatRoute <span className="text-on-surface-variant/25">·</span> 2025 — present
-            <span className="text-on-surface-variant/25"> · </span>Gurugram, India
+            {/* Experience now sits below the work, so the employment signal lives
+                here. Inline and muted so it reads as an aside, not a second line. */}
+            <span className="ml-3 font-mono font-normal align-middle whitespace-nowrap text-[clamp(0.72rem,1.15vw,1rem)] tracking-[0.04em] text-on-surface-variant/40">
+              @ BeatRoute
+            </span>
           </p>
           <p className="text-[clamp(1.2rem,2.8vw,2.6rem)] font-headline font-semibold tracking-[-0.01em] text-on-surface/55 leading-[1.2] mt-1">
             crafting scalable

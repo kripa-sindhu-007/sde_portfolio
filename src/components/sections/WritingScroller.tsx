@@ -70,7 +70,14 @@ function CardBody({ entry }: { entry: IndexEntry }) {
   );
 }
 
-export default function WritingScroller({ entries }: { entries: IndexEntry[] }) {
+export default function WritingScroller({
+  entries,
+  children,
+}: {
+  entries: IndexEntry[];
+  /** the section header, rendered on the server and placed beside the controls */
+  children: React.ReactNode;
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (dir: "left" | "right") => {
@@ -80,15 +87,19 @@ export default function WritingScroller({ entries }: { entries: IndexEntry[] }) 
 
   return (
     <div className="relative">
-      <div className="hidden md:flex items-center justify-end gap-3 px-6 md:px-16 lg:px-24 mb-4">
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-surface-container-high/30 hover:bg-surface-container-highest/50 border border-outline-variant/10 hover:border-primary/20 text-on-surface-variant/50 hover:text-primary rounded-lg transition-all duration-300 cursor-pointer"
-        >
-          <span className="material-symbols-outlined text-[16px]">article</span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.1em]">All writing</span>
-        </Link>
-        <div className="flex items-center gap-2">
+      {/* header and controls share one row — the controls used to sit on their
+          own line below, which wasted a band of vertical space */}
+      <div className="px-6 md:px-16 lg:px-24 mb-8 flex items-end justify-between gap-8">
+        <div className="min-w-0">{children}</div>
+
+        <div className="hidden md:flex items-center gap-3 shrink-0 pb-1">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-surface-container-high/30 hover:bg-surface-container-highest/50 border border-outline-variant/10 hover:border-primary/20 text-on-surface-variant/50 hover:text-primary rounded-lg transition-all duration-300 cursor-pointer whitespace-nowrap"
+          >
+            <span className="material-symbols-outlined text-[16px]">article</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.1em]">All writing</span>
+          </Link>
           <button
             onClick={() => scroll("left")}
             aria-label="Scroll writing left"

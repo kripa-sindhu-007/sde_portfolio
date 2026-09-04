@@ -19,7 +19,7 @@ export default function Writing() {
     <section id="writing" className="relative py-24 overflow-hidden">
       <div className="absolute top-1/3 left-[-10%] w-[500px] h-[500px] bg-primary/[0.02] blur-[160px] rounded-full pointer-events-none" />
 
-      <div className="px-6 md:px-16 lg:px-24 mb-12">
+      <WritingScroller entries={entries}>
         <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 bg-surface-container-high/50 rounded-md border border-outline-variant/10">
           <span className="w-1 h-1 rounded-full bg-primary" />
           <span className="font-mono text-[10px] tracking-[0.12em] text-primary uppercase">
@@ -33,9 +33,7 @@ export default function Writing() {
           Distributed systems, performance, and the things that only show up once
           something is actually running.
         </p>
-      </div>
-
-      <WritingScroller entries={entries} />
+      </WritingScroller>
     </section>
   );
 }
