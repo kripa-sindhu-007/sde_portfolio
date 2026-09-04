@@ -119,6 +119,68 @@ function ProjectIllustration({ id }: { id: string }) {
         </svg>
       );
 
+    /* ── prahari: the env gate — raw strings in, typed config out ── */
+    case "prahari":
+      return (
+        <svg viewBox="0 0 380 140" fill="none" className="w-full h-full">
+          {/* Grid dots */}
+          {Array.from({ length: 8 }).map((_, row) =>
+            Array.from({ length: 16 }).map((_, col) => (
+              <circle
+                key={`${row}-${col}`}
+                cx={20 + col * 22}
+                cy={10 + row * 18}
+                r="0.5"
+                style={{ fill: pc(8) }}
+              />
+            ))
+          )}
+          {/* npm pill */}
+          <rect x="20" y="12" width="46" height="14" rx="3" strokeWidth="0.8" style={{ stroke: tc(30), fill: tc(8) }} />
+          <text x="43" y="22" textAnchor="middle" className="fill-tertiary/70 text-[8px]" fontFamily="monospace" fontWeight="700">npm</text>
+          <text x="72" y="22" className="fill-primary/40 text-[8px]" fontFamily="monospace">prahari@1.0.0</text>
+          <text x="292" y="22" className="fill-primary/25 text-[7px]" fontFamily="monospace">0 deps</text>
+          <circle cx="340" cy="18" r="7" strokeWidth="0.8" style={{ stroke: pc(20), fill: pc(3) }} />
+          <text x="340" y="21" textAnchor="middle" className="fill-primary/50 text-[7px]" fontFamily="monospace" fontWeight="700">TS</text>
+          {/* process.env label */}
+          <text x="20" y="38" className="fill-primary/25 text-[7px]" fontFamily="monospace">process.env</text>
+          {/* Raw untyped strings */}
+          <rect x="20" y="42" width="86" height="16" rx="3" strokeWidth="0.8" style={{ stroke: pc(15), fill: pc(4) }} />
+          <text x="26" y="53" className="fill-primary/35 text-[8px]" fontFamily="monospace">PORT=&quot;3000&quot;</text>
+          <rect x="20" y="62" width="86" height="16" rx="3" strokeWidth="0.8" style={{ stroke: pc(15), fill: pc(4) }} />
+          <text x="26" y="73" className="fill-primary/35 text-[8px]" fontFamily="monospace">DEBUG=&quot;no&quot;</text>
+          <rect x="20" y="82" width="86" height="16" rx="3" strokeWidth="0.8" style={{ stroke: tc(22), fill: tc(5) }} />
+          <text x="26" y="93" className="fill-tertiary/50 text-[8px]" fontFamily="monospace">KEY=•••••</text>
+          {/* Arrows into the gate */}
+          <line x1="106" y1="50" x2="124" y2="58" strokeWidth="1" strokeDasharray="3 2" style={{ stroke: pc(20) }} />
+          <line x1="106" y1="70" x2="124" y2="68" strokeWidth="1" strokeDasharray="3 2" style={{ stroke: pc(20) }} />
+          <line x1="106" y1="90" x2="124" y2="78" strokeWidth="1" strokeDasharray="3 2" style={{ stroke: pc(20) }} />
+          <polygon points="122,64 129,68 122,72" style={{ fill: pc(25) }} />
+          {/* The gate — sentinel shield */}
+          <rect x="130" y="40" width="82" height="58" rx="8" strokeWidth="1.2" style={{ stroke: pc(40), fill: pc(6) }} />
+          <path d="M171 50 l13 5 v9 c0 8 -6 14 -13 17 c-7 -3 -13 -9 -13 -17 v-9 z" strokeWidth="1" style={{ stroke: pc(45), fill: pc(10) }} />
+          <path d="M166 64 l4 4 l7 -8" strokeWidth="1.4" fill="none" stroke="rgba(74,222,128,0.55)" strokeLinecap="round" />
+          <text x="171" y="92" textAnchor="middle" className="fill-primary/55 text-[8px]" fontFamily="monospace" fontWeight="600">defineEnv</text>
+          {/* Arrow out of the gate */}
+          <line x1="212" y1="68" x2="230" y2="68" strokeWidth="1" style={{ stroke: pc(25) }} />
+          <polygon points="228,64 235,68 228,72" style={{ fill: pc(30) }} />
+          {/* Typed output */}
+          <text x="238" y="38" className="fill-primary/25 text-[7px]" fontFamily="monospace">typed · frozen</text>
+          <rect x="238" y="42" width="90" height="16" rx="3" strokeWidth="0.8" stroke="rgba(74,222,128,0.3)" fill="rgba(74,222,128,0.05)" />
+          <text x="244" y="53" className="fill-green-400/55 text-[8px]" fontFamily="monospace">PORT: number</text>
+          <rect x="238" y="62" width="90" height="16" rx="3" strokeWidth="0.8" stroke="rgba(74,222,128,0.3)" fill="rgba(74,222,128,0.05)" />
+          <text x="244" y="73" className="fill-green-400/55 text-[8px]" fontFamily="monospace">DEBUG: boolean</text>
+          <rect x="238" y="82" width="90" height="16" rx="3" strokeWidth="0.8" style={{ stroke: tc(25), fill: tc(5) }} />
+          <text x="244" y="93" className="fill-tertiary/55 text-[8px]" fontFamily="monospace">KEY: redacted</text>
+          {/* CLI drift guard */}
+          <text x="20" y="120" className="fill-primary/30 text-[8px]" fontFamily="monospace">$ prahari sync</text>
+          <rect x="104" y="110" width="122" height="14" rx="3" strokeWidth="0.8" style={{ stroke: tc(25), fill: tc(5) }} />
+          <text x="165" y="120" textAnchor="middle" className="fill-tertiary/55 text-[7px]" fontFamily="monospace">.env.example drift</text>
+          <text x="238" y="120" className="fill-tertiary/70 text-[8px]" fontFamily="monospace" fontWeight="700">exit 1</text>
+          <text x="288" y="120" className="fill-primary/20 text-[7px]" fontFamily="monospace">CI fails</text>
+        </svg>
+      );
+
     /* ── AI Travel Planner: route with waypoints ── */
     case "ai-travel-planner":
       return (
