@@ -9,6 +9,9 @@ import { mdxComponents } from "@/blog-kit/components/mdx-components";
 import { SITE_URL } from "@/lib/site";
 import Link from "next/link";
 import { BlogBar } from "../BlogBar";
+import { JsonLd } from "@/components/JsonLd";
+import { articleSchema } from "@/lib/schema";
+import { toISODate } from "@/blog-kit/lib/frontmatter";
 
 export function generateStaticParams() {
   return getPosts().map((p) => ({ slug: p.slug }));
@@ -33,6 +36,9 @@ export async function generateMetadata({
       description: post.fm.deck,
       url,
       type: "article",
+      publishedTime: toISODate(post.fm.created),
+      authors: ["Kripa Sindhu"],
+      tags: post.fm.topics,
       // social has no theme signal, so always the dark cover (D5)
       images: [`/blog/${slug}/cover-dark.png`],
     },
@@ -56,6 +62,7 @@ export default async function Article({ params }: { params: Promise<{ slug: stri
 
   return (
     <>
+      <JsonLd data={articleSchema({ slug, fm, body })} />
       <BlogBar back={{ href: "/blog", label: "← all writing" }} />
       <div className="wrap">
         <header className="post-head">

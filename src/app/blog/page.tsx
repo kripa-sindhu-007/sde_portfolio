@@ -6,6 +6,8 @@ import { formatDate } from "@/blog-kit/lib/frontmatter";
 import { SITE_URL } from "@/lib/site";
 import { BlogBar } from "./BlogBar";
 import { Filters } from "./Filters";
+import { JsonLd } from "@/components/JsonLd";
+import { blogIndexSchema } from "@/lib/schema";
 
 export const metadata: Metadata = {
   // no name suffix — the root layout's title template already appends it
@@ -74,6 +76,7 @@ export default function BlogIndex() {
 
   return (
     <>
+      <JsonLd data={blogIndexSchema()} />
       <BlogBar />
       <div className="idx">
         <div className="eyebrow">ls ~/writing</div>

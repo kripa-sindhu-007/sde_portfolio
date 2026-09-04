@@ -14,6 +14,8 @@ import ContextMenu from "@/components/ui/ContextMenu";
 import ScrollBottom from "@/components/ui/ScrollBottom";
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/site";
+import { JsonLd } from "@/components/JsonLd";
+import { homepageSchema } from "@/lib/schema";
 
 // Declared on the page rather than the root layout: a canonical in the layout is
 // inherited, so any future route that forgot to set its own would claim to be
@@ -29,6 +31,7 @@ export default async function Home() {
 
   return (
     <div className="noise-overlay relative">
+      <JsonLd data={homepageSchema()} />
       <BootScreen />
       <ContextMenu />
       <BinaryTorch />
