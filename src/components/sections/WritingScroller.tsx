@@ -15,8 +15,13 @@ function CardBody({ entry }: { entry: IndexEntry }) {
     <>
       {/* Thumbnail — the homepage is dark-only, so the dark cover always.
           No terminal chrome here: it fights the artwork, which already has its
-          own composition. That device belongs to Featured Work. */}
-      <div className="relative h-[180px] bg-surface-container-lowest/60 border-b border-outline-variant/6 overflow-hidden">
+          own composition. That device belongs to Featured Work.
+
+          rounded-t-xl is not redundant with the card's rounding: the card uses
+          backdrop-blur, and in Chromium a backdrop-filter creates a backdrop
+          root that stops border-radius clipping its descendants — so the image
+          corners render square unless rounded here too. */}
+      <div className="relative h-[180px] bg-surface-container-lowest/60 border-b border-outline-variant/6 overflow-hidden rounded-t-xl">
         {entry.cover ? (
           <Image
             src={`${entry.cover}-dark.png`}
