@@ -97,12 +97,20 @@
   color: var(--prose);
   font-family: var(--body);
   -webkit-font-smoothing: antialiased;
-  /* scrollbars and form controls follow the theme, for this subtree only */
-  color-scheme: light;
 }
-:root[data-theme="dark"] .blog-root { color-scheme: dark; }
+
+/* The browser paints the canvas — overscroll, and the window/tab chrome — from
+   html/body, never from a wrapper div. Styling only .blog-root left the host
+   page's dark body showing around a light article.
+   :has() ties these to the presence of a blog page in the DOM, so they apply
+   while one is mounted and stop the instant the reader navigates away. That
+   keeps the isolation without leaving the canvas mismatched. */
+body:has(.blog-root) { background: var(--bg); }
+
+:root:has(.blog-root) { color-scheme: light; }
+:root[data-theme="dark"]:has(.blog-root) { color-scheme: dark; }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .blog-root { color-scheme: dark; }
+  :root:not([data-theme="light"]):has(.blog-root) { color-scheme: dark; }
 }
 
 .blog-root ::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
