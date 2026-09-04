@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import ThemePicker from "@/components/ui/ThemePicker";
 import { RESUME_URL } from "@/lib/resume";
@@ -186,6 +187,19 @@ export default function Navbar() {
               <ThemePicker />
             </div>
 
+            {/* Writing — the blog is a primary destination, not a section */}
+            <Link
+              href="/blog"
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-1.5 bg-primary/8 hover:bg-primary/15 border border-primary/15 hover:border-primary/30 rounded-lg transition-all duration-300 group"
+            >
+              <span className="material-symbols-outlined text-[14px] text-primary/60 group-hover:text-primary transition-colors duration-300">
+                article
+              </span>
+              <span className="font-label text-[10px] uppercase tracking-[0.08em] text-primary/70 group-hover:text-primary transition-colors duration-300">
+                Writing
+              </span>
+            </Link>
+
             {/* Resume button */}
             <a
               href={RESUME_URL}
@@ -318,6 +332,29 @@ export default function Navbar() {
                   </motion.a>
                 );
               })}
+
+              {/* Writing link in mobile */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                  delay: 0.05 + navLinks.length * 0.06,
+                  duration: 0.4,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <Link
+                  href="/blog"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-4 py-4 border-b border-outline-variant/6 text-on-surface-variant/50 hover:text-primary transition-colors duration-300"
+                >
+                  <span className="font-mono text-[10px] text-on-surface-variant/20 w-6 tabular-nums">
+                    /
+                  </span>
+                  <span className="material-symbols-outlined text-[18px]">article</span>
+                  <span className="font-headline text-lg">Writing</span>
+                </Link>
+              </motion.div>
 
               {/* Resume link in mobile */}
               <motion.a

@@ -11,7 +11,7 @@ export function Filters({ topics }: { topics: string[] }) {
     setActive(t);
     document.querySelectorAll<HTMLElement>("#entries .entry").forEach((el) => {
       const show = !t || (el.dataset.topics ?? "").split(" ").includes(t);
-      el.style.display = show ? "block" : "none";
+      el.style.display = show ? "flex" : "none";
     });
   }
 

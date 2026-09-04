@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getIndexEntries } from "@/lib/posts";
+import Image from "next/image";
+import { getIndexEntries, type IndexEntry } from "@/lib/posts";
 import { formatDate } from "@/blog-kit/lib/frontmatter";
 import { SITE_URL } from "@/lib/site";
 import { BlogBar } from "./BlogBar";
@@ -10,8 +11,58 @@ export const metadata: Metadata = {
   title: "Writing — Kripa Sindhu",
   description:
     "Notes on distributed systems, performance and the things that only show up once something is running.",
-  alternates: { canonical: `${SITE_URL}/blog` },
+  alternates: {
+    canonical: `${SITE_URL}/blog`,
+    types: { "application/rss+xml": `${SITE_URL}/blog/rss.xml` },
+  },
 };
+
+function CardInner({ entry }: { entry: IndexEntry }) {
+  return (
+    <>
+      <div className={`c-thumb${entry.cover ? "" : " none"}`}>
+        {entry.cover ? (
+          <>
+            {/* both render; CSS shows whichever matches the active theme */}
+            <Image
+              className="fig-light"
+              src={`${entry.cover}-light.png`}
+              alt=""
+              width={1200}
+              height={628}
+            />
+            <Image
+              className="fig-dark"
+              src={`${entry.cover}-dark.png`}
+              alt=""
+              width={1200}
+              height={628}
+            />
+          </>
+        ) : (
+          <span>{entry.platform ?? "note"}</span>
+        )}
+      </div>
+
+      <div className="c-body">
+        <div className="c-meta">
+          <span>{formatDate(entry.date)}</span>
+          {entry.minutes ? <span>· {entry.minutes} min</span> : null}
+          {entry.kind === "external" ? (
+            <span className="c-off">{entry.platform} ↗</span>
+          ) : null}
+        </div>
+        <div className="c-title">{entry.title}</div>
+        {entry.deck ? <div className="c-deck">{entry.deck}</div> : null}
+        <div className="c-tags">
+          {entry.topics.map((t) => (
+            <span key={t}>#{t}</span>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
 
 export default function BlogIndex() {
   const entries = getIndexEntries();
@@ -30,39 +81,30 @@ export default function BlogIndex() {
 
         <Filters topics={topics} />
 
-        <div id="entries">
-          {entries.map((e) => {
-            const meta = (
-              <>
-                <div className="em">
-                  <span>{formatDate(e.date)}</span>
-                  {e.minutes && <span>{e.minutes} min</span>}
-                  {e.kind === "external" && <span className="off">on {e.platform} ↗</span>}
-                  {e.topics.map((t) => (
-                    <span key={t}>#{t}</span>
-                  ))}
-                </div>
-                <div className="et">{e.title}</div>
-                {e.deck && <div className="ed">{e.deck}</div>}
-              </>
-            );
-            return e.kind === "native" ? (
-              <Link key={e.href} href={e.href} className="entry" data-topics={e.topics.join(" ")}>
-                {meta}
+        <div id="entries" className="grid">
+          {entries.map((entry) =>
+            entry.kind === "native" ? (
+              <Link
+                key={entry.href}
+                href={entry.href}
+                className="card entry"
+                data-topics={entry.topics.join(" ")}
+              >
+                <CardInner entry={entry} />
               </Link>
             ) : (
               <a
-                key={e.href}
-                href={e.href}
+                key={entry.href}
+                href={entry.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="entry"
-                data-topics={e.topics.join(" ")}
+                className="card entry"
+                data-topics={entry.topics.join(" ")}
               >
-                {meta}
+                <CardInner entry={entry} />
               </a>
-            );
-          })}
+            ),
+          )}
         </div>
       </div>
     </>

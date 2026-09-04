@@ -43,6 +43,8 @@ export type IndexEntry = {
   topics: string[];
   minutes?: number;
   platform?: string;
+  /** basename of the dual cover pair, e.g. /blog/<slug>/cover */
+  cover?: string;
 };
 
 /** Native and external, merged and sorted — the index is the single home for
@@ -56,6 +58,7 @@ export function getIndexEntries(): IndexEntry[] {
     deck: p.fm.deck,
     topics: p.fm.topics ?? [],
     minutes: p.minutes,
+    cover: p.fm.cover ? `/blog/${p.slug}/${p.fm.cover}` : undefined,
   }));
   const ext: IndexEntry[] = externalPosts.map((e: ExternalPost) => ({
     kind: "external",
@@ -67,4 +70,13 @@ export function getIndexEntries(): IndexEntry[] {
     platform: e.platform,
   }));
   return [...native, ...ext].sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+/** Previous and next by date, for the article footer. */
+export function getNeighbours(slug: string): { prev: Post | null; next: Post | null } {
+  const posts = getPosts();
+  const i = posts.findIndex((p) => p.slug === slug);
+  if (i === -1) return { prev: null, next: null };
+  // posts are newest-first, so "next" is the newer one
+  return { next: posts[i - 1] ?? null, prev: posts[i + 1] ?? null };
 }

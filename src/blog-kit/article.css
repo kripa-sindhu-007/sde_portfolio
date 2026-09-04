@@ -175,14 +175,17 @@ body {
   margin-top: 12px; text-align: center; font-family: var(--mono);
   font-size: 11.5px; color: var(--faint); line-height: 1.6;
 }
-/* dual covers: show the one matching the active theme, swapped in CSS so
-   there is no flash and no JS involved */
-.fig-dark { display: none; }
-:root[data-theme="dark"] .fig-dark { display: block; }
-:root[data-theme="dark"] .fig-light { display: none; }
+/* Dual covers: show the one matching the active theme, swapped in CSS so there
+   is no flash and no JS involved.
+   NOTE the `.prose figure img` qualifier on every rule — without it these lose
+   to `.prose figure img { display: block }` above on specificity, and BOTH
+   covers render. */
+.prose figure img.fig-dark { display: none; }
+:root[data-theme="dark"] .prose figure img.fig-dark { display: block; }
+:root[data-theme="dark"] .prose figure img.fig-light { display: none; }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .fig-dark { display: block; }
-  :root:not([data-theme="light"]) .fig-light { display: none; }
+  :root:not([data-theme="light"]) .prose figure img.fig-dark { display: block; }
+  :root:not([data-theme="light"]) .prose figure img.fig-light { display: none; }
 }
 
 /* ── aside ──────────────────────────────────────────────────────── */

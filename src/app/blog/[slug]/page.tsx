@@ -3,10 +3,11 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrettyCode, { type Options } from "rehype-pretty-code";
 import remarkGfm from "remark-gfm";
-import { getPost, getPosts } from "@/lib/posts";
+import { getNeighbours, getPost, getPosts } from "@/lib/posts";
 import { formatDate } from "@/blog-kit/lib/frontmatter";
 import { mdxComponents } from "@/blog-kit/components/mdx-components";
 import { SITE_URL } from "@/lib/site";
+import Link from "next/link";
 import { BlogBar } from "../BlogBar";
 
 export function generateStaticParams() {
@@ -49,7 +50,8 @@ export default async function Article({ params }: { params: Promise<{ slug: stri
   if (!post) notFound();
 
   const { fm, body, minutes } = post;
-  const posted = Object.entries(fm.posted ?? {}).filter(([, v]) => v);
+  const posted = Object.entries(fm.posted ?? {}).filter(([k, v]) => v && k !== "blog");
+  const { prev, next } = getNeighbours(slug);
 
   return (
     <>
@@ -80,12 +82,35 @@ export default async function Article({ params }: { params: Promise<{ slug: stri
         <footer className="post-foot">
           <div className="rule" />
           <div className="xp">
-            {posted.map(([channel, when]) => (
-              <span key={channel} style={{ color: "var(--faint)" }}>
-                {channel} · {String(when)}
+            {posted.length > 0 && <span style={{ color: "var(--faint)" }}>Also published:</span>}
+            {posted.map(([channel]) => (
+              <span key={channel} className="chan">
+                {channel}
               </span>
             ))}
+            <a href="/blog/rss.xml">Subscribe via RSS</a>
           </div>
+
+          {(prev || next) && (
+            <div className="neighbours">
+              {prev ? (
+                <Link className="nb" href={`/blog/${prev.slug}`}>
+                  <div className="l">← Previous</div>
+                  <div className="t">{prev.fm.title}</div>
+                </Link>
+              ) : (
+                <span />
+              )}
+              {next ? (
+                <Link className="nb next" href={`/blog/${next.slug}`}>
+                  <div className="l">Next →</div>
+                  <div className="t">{next.fm.title}</div>
+                </Link>
+              ) : (
+                <span />
+              )}
+            </div>
+          )}
         </footer>
       </div>
     </>
