@@ -1,6 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/sections/Hero";
-import { getGitHubStats } from "@/lib/github";
+import { getUpstreamStats } from "@/lib/github";
 import Projects from "@/components/sections/Projects";
 import Experience from "@/components/sections/Experience";
 import Publications from "@/components/sections/Publications";
@@ -25,9 +25,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  // fetched here rather than in the browser: one set of calls per
-  // revalidation instead of three per visitor against a 60/hour IP limit
-  const stats = await getGitHubStats();
+  // fetched here rather than in the browser: one pair of calls per
+  // revalidation instead of two per visitor against a 60/hour IP limit
+  const upstream = await getUpstreamStats();
 
   return (
     <div className="noise-overlay relative">
@@ -37,7 +37,7 @@ export default async function Home() {
       <BinaryTorch />
       <Navbar />
       <main className="pt-16 min-h-screen relative z-[3]">
-        <Hero stats={stats} />
+        <Hero upstream={upstream} />
         <Projects />
         <Writing />
         <Experience />
