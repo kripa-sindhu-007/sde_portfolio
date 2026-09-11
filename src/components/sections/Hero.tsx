@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "motion/react";
-import GitHubCard from "@/components/ui/GitHubCard";
-import type { GitHubStats } from "@/lib/github";
+import UpstreamCard from "@/components/ui/UpstreamCard";
+import type { UpstreamStats } from "@/lib/github";
 import { RESUME_UPDATED, RESUME_URL } from "@/lib/resume";
 
 const stagger = {
@@ -48,7 +48,7 @@ const fadeIn = {
 } as const;
 
 
-export default function Hero({ stats }: { stats: GitHubStats }) {
+export default function Hero({ upstream }: { upstream: UpstreamStats }) {
   return (
     <section className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-center items-start px-6 md:px-16 lg:px-24 data-grid-bg scanlines overflow-hidden">
       {/* Ambient glow orbs */}
@@ -213,8 +213,8 @@ export default function Hero({ stats }: { stats: GitHubStats }) {
         </motion.div>
       </motion.div>
 
-      {/* GitHub Stats Card */}
-      <GitHubCard stats={stats} />
+      {/* Upstream contributions card */}
+      <UpstreamCard upstream={upstream} />
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 animate-scroll-bounce">

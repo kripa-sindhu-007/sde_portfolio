@@ -2,97 +2,152 @@
 // and uses fetch caching that has no meaning in the browser.
 const USER = "kripa-sindhu-007";
 
-export type GitHubStats = {
-  repos: number;
-  commits: number;
-  /** every language across every public repo, not just each repo's primary one */
-  languages: number;
-  languageNames: string[];
+export type UpstreamPR = {
+  /** owner/name, e.g. open-feature/go-sdk */
+  repo: string;
+  /** the repository's stars, not this account's — context for the work, nothing more */
   stars: number;
-  /** whole years since the account was created */
-  yearsOnGitHub: number;
-  /** false when GitHub rate-limited us and the numbers are a fallback */
+  number: number;
+  title: string;
+  url: string;
+  state: "merged" | "review";
+};
+
+export type UpstreamStats = {
+  /** merged first, then the newest still in review */
+  recent: UpstreamPR[];
+  /** false when GitHub rate-limited us and `recent` is the cached copy below */
   live: boolean;
 };
 
 /**
  * Fetched on the server and cached for a day.
  *
- * This used to run in the browser on every visit. Unauthenticated GitHub allows
- * 60 requests/hour *per IP*, and the card made three per visitor, so a modest
- * burst of traffic exhausted the quota and everyone after that saw zeros. Doing
- * it here means one set of calls per revalidation regardless of traffic, no
- * fetch in the hero's critical path, and no numbers arriving late to shift the
- * layout.
+ * Unauthenticated GitHub allows 60 requests/hour *per IP*, so anything the hero
+ * needs is fetched here rather than in the browser: one set of calls per
+ * revalidation regardless of traffic, nothing in the hero's critical path, and no
+ * numbers arriving late to shift the layout.
  *
- * The budget also makes the language count honest: /languages per repo instead
- * of each repo's single primary language, which was hiding Go behind TypeScript
- * on both flagship projects.
+ * `-user:` is the term that makes this mean anything. Without it the search also
+ * counts pull requests merged into this account's own repositories, which anyone
+ * can do to themselves; with it, every row is work a maintainer elsewhere took.
+ *
+ * Stars are deliberately per-row rather than a ranked list of repositories. Any
+ * ranking the API can express misrepresents: by stars, a one-line addition to
+ * standard-schema's ecosystem list (3.6k) outranks four merged fixes in
+ * open-feature/go-sdk (249).
  */
 const DAY = 60 * 60 * 24;
 
-const FALLBACK: GitHubStats = {
-  repos: 13,
-  commits: 1228,
-  languages: 9,
-  languageNames: [],
-  stars: 6,
-  yearsOnGitHub: 2,
-  live: false,
+/** Shown with a "cached" marker, never with the live indicator — see UpstreamCard. */
+const FALLBACK: UpstreamPR[] = [
+  {
+    repo: "open-feature/go-sdk",
+    stars: 249,
+    number: 575,
+    title: "return an empty flag metadata record on evaluate's early returns",
+    url: "https://github.com/open-feature/go-sdk/pull/575",
+    state: "merged",
+  },
+  {
+    repo: "open-feature/go-sdk",
+    stars: 249,
+    number: 574,
+    title: "resolve disabled flags without an error",
+    url: "https://github.com/open-feature/go-sdk/pull/574",
+    state: "merged",
+  },
+  {
+    repo: "open-feature/go-sdk",
+    stars: 249,
+    number: 566,
+    title: "return default value from ObjectValueDetails on abnormal execution",
+    url: "https://github.com/open-feature/go-sdk/pull/566",
+    state: "merged",
+  },
+  {
+    repo: "go-git/go-git",
+    stars: 7710,
+    number: 2373,
+    title: "keep locally held shallow boundaries reachable",
+    url: "https://github.com/go-git/go-git/pull/2373",
+    state: "review",
+  },
+];
+
+type SearchItem = {
+  number: number;
+  title: string;
+  html_url: string;
+  repository_url: string;
 };
 
-async function gh<T>(path: string, accept?: string): Promise<T | null> {
+async function search(state: "merged" | "open"): Promise<SearchItem[] | null> {
+  const q = `author:${USER}+type:pr+is:${state}+-user:${USER}`;
   try {
-    const res = await fetch(`https://api.github.com${path}`, {
-      headers: accept ? { Accept: accept } : {},
-      next: { revalidate: DAY },
-    });
+    const res = await fetch(
+      `https://api.github.com/search/issues?q=${q}&sort=created&order=desc&per_page=30`,
+      { next: { revalidate: DAY } },
+    );
     if (!res.ok) return null;
-    return (await res.json()) as T;
+    return ((await res.json()) as { items: SearchItem[] }).items;
   } catch {
     return null;
   }
 }
 
-export async function getGitHubStats(): Promise<GitHubStats> {
-  const [user, commitSearch, repos] = await Promise.all([
-    gh<{ public_repos: number; created_at: string }>(`/users/${USER}`),
-    gh<{ total_count: number }>(
-      `/search/commits?q=author:${USER}&per_page=1`,
-      "application/vnd.github.cloak-preview+json",
-    ),
-    gh<Array<{ name: string; fork: boolean; stargazers_count: number }>>(
-      `/users/${USER}/repos?per_page=100&sort=updated`,
-    ),
-  ]);
+async function starsFor(repo: string): Promise<number> {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${repo}`, {
+      next: { revalidate: DAY },
+    });
+    if (!res.ok) return 0;
+    return ((await res.json()) as { stargazers_count: number }).stargazers_count ?? 0;
+  } catch {
+    return 0;
+  }
+}
 
-  if (!user || !repos) return FALLBACK;
+/** repository_url is an API url; the owner/name pair is its last two segments */
+function repoOf(repositoryUrl: string): string {
+  return repositoryUrl.split("/").slice(-2).join("/");
+}
 
-  const own = repos.filter((r) => !r.fork);
-  const stars = own.reduce((n, r) => n + (r.stargazers_count ?? 0), 0);
+/** Conventional-commit prefixes carry no meaning outside the repo they came from. */
+function stripPrefix(title: string): string {
+  return title
+    .replace(/^(fix|feat|docs|chore|refactor|test)(\([^)]*\))?:\s*/, "")
+    .replace(/\.?\s*Fixes #\d+\.?$/i, "");
+}
 
-  // one call per repo — affordable here, never on a visitor's machine
-  const perRepo = await Promise.all(
-    own.map((r) => gh<Record<string, number>>(`/repos/${USER}/${r.name}/languages`)),
-  );
-  const languages = new Set<string>();
-  perRepo.forEach((langs) => {
-    if (langs) Object.keys(langs).forEach((l) => languages.add(l));
-  });
+export async function getUpstreamStats(): Promise<UpstreamStats> {
+  const [merged, open] = await Promise.all([search("merged"), search("open")]);
 
-  const created = new Date(user.created_at);
-  const years = Math.max(
-    1,
-    Math.floor((Date.now() - created.getTime()) / (365.25 * 24 * 60 * 60 * 1000)),
+  if (!merged?.length) return { recent: FALLBACK, live: false };
+
+  // Merged work leads; one in-review row shows the pipeline is still moving.
+  const picked = [
+    ...merged.slice(0, 3).map((i) => ({ item: i, state: "merged" as const })),
+    ...(open ?? []).slice(0, 1).map((i) => ({ item: i, state: "review" as const })),
+  ];
+
+  const repos = [...new Set(picked.map((p) => repoOf(p.item.repository_url)))];
+  const stars = new Map(
+    await Promise.all(repos.map(async (r) => [r, await starsFor(r)] as const)),
   );
 
   return {
-    repos: user.public_repos ?? FALLBACK.repos,
-    commits: commitSearch?.total_count ?? FALLBACK.commits,
-    languages: languages.size || FALLBACK.languages,
-    languageNames: [...languages].sort(),
-    stars,
-    yearsOnGitHub: years,
+    recent: picked.map(({ item, state }) => {
+      const repo = repoOf(item.repository_url);
+      return {
+        repo,
+        stars: stars.get(repo) ?? 0,
+        number: item.number,
+        title: stripPrefix(item.title),
+        url: item.html_url,
+        state,
+      };
+    }),
     live: true,
   };
 }
