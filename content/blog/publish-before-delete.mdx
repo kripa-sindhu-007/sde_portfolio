@@ -1,0 +1,163 @@
+---
+title: Publish before you delete
+slug: publish-before-delete
+deck: A failed repack in go-git could delete the only copy of your commits and still hand you a polite error. The cause was one defer.
+status: ready
+created: 2026-10-16
+channels: [blog, linkedin]
+posted:
+  blog: null
+  linkedin: null
+canonical: null
+topics: [go, git, open-source, data-integrity, defer]
+source: go-git/go-git#2385 (fixes #2370)
+cover: cover
+---
+
+`RepackObjects` in go-git could fail, return an error, and leave your repository unable to read its own `HEAD`. The objects it was supposed to repack were gone, and the pack meant to replace them was never written.
+
+The bug was filed by [N0zoM1z0](https://github.com/go-git/go-git/issues/2370). I reproduced it, fixed it, and the fix merged as [#2385](https://github.com/go-git/go-git/pull/2385). It ships in go-git v6.0.0-beta.1. The fix itself is a few lines. What I want to write down is how an ordinary Go idiom ended up running a delete before the write it depended on.
+
+<Figure
+  src="/blog/publish-before-delete/cover"
+  alt="The order of operations in go-git's repack before and after the fix: before, loose objects were deleted before the pack was published; after, a failed publish returns before anything is deleted"
+  caption="Same injected failure in both runs. Only the order changed."
+/>
+
+## Loose objects and packs
+
+Git stores every commit, tree and file as an **object**. A new object is first written as its own small file, a *loose object*. Over time, **repacking** gathers those into a single compressed *pack*, and the loose copies are deleted because the pack now holds them.
+
+That order is what keeps it safe. The loose files can only go once the pack that replaces them is actually on disk.
+
+## Where the order flipped
+
+Here is the helper that does the work, trimmed, as it was before the fix:
+
+```go title="repository.go (before)"
+// createNewObjectPack is a helper for RepackObjects taking care
+// of creating a new pack. It is used so the PackfileWriter
+// deferred close has the right scope.
+func (r *Repository) createNewObjectPack(cfg *RepackConfig) (h plumbing.Hash, err error) {
+	// ...walk every ref to find the reachable objects...
+	wc, err := r.newPackWriter(ow.promisor)
+	if err != nil {
+		return h, err
+	}
+	defer ioutil.CheckClose(wc, &err)
+
+	// ...encode every object into wc...
+
+	// Delete the packed, loose objects.
+	if los, ok := r.Storer.(storer.LooseObjectStorer); ok {
+		// for each object written to the pack: los.DeleteLooseObject(hash)
+	}
+	return h, err
+}
+```
+
+`defer` runs when the function returns. So the order on the way out is: encode, delete the loose objects, return, and *then* close the pack writer.
+
+That would be fine if `Close` only released a file handle. It does not. On disk, `PackWriter.Close` calls `save()`, which renames the temporary pack file into `objects/pack/`. **Closing is publishing.** Until it runs, the new pack does not exist as far as any reader is concerned.
+
+If that close fails, `CheckClose` copies the error into `err`, and the caller gets an error back. By then the loose objects have already been deleted.
+
+The doc comment says the helper exists so the deferred close "has the right scope". The scope was fine. The problem was when the close ran.
+
+## Reproducing it
+
+I wanted my own reproduction rather than the reporter's, so I wrapped the filesystem and made only the `tmp_pack_` file fail when it is closed. Every byte writes fine; the publish step fails. Same repository, same injected error, run against go-git `main` just before and just after the merge:
+
+| | Before the fix | After the fix |
+| --- | --- | --- |
+| Error returned | yes | yes |
+| Loose objects | 3 → 0 | 3 → 3 |
+| Packs on disk | none | none |
+| Read `HEAD` afterwards | `object not found` | ok |
+
+Both runs return the same error. Only the fixed one still has the commits.
+
+## How git does it
+
+go-git expects a behaviour change to match real git, so the next step was reading what `git repack` does. Three places in git v2.55.0 answer it:
+
+- [`builtin/repack.c:571`](https://github.com/git/git/blob/e9019fcafe0040228b8631c30f97ae1adb61bcdc/builtin/repack.c#L571) installs the new packs, and only after that, at [`:603`](https://github.com/git/git/blob/e9019fcafe0040228b8631c30f97ae1adb61bcdc/builtin/repack.c#L603-L616), does it remove anything redundant and prune loose objects.
+- Installing a pack is a rename. If it fails, git stops right there, at [`repack.c:393`](https://github.com/git/git/blob/e9019fcafe0040228b8631c30f97ae1adb61bcdc/repack.c#L393): `die_errno(_("renaming pack to '%s' failed"), ...)`. Nothing gets pruned.
+- Even then, pruning checks each object one more time, at [`prune-packed.c:27`](https://github.com/git/git/blob/e9019fcafe0040228b8631c30f97ae1adb61bcdc/prune-packed.c#L22-L34). It only unlinks a loose object if a pack really contains it:
+
+```c title="prune-packed.c"
+	if (!has_object_pack(the_repository, oid))
+		return 0;
+```
+
+So git publishes first, deletes second, and checks once more before each delete. go-git needed the same order.
+
+## The fix, and why the obvious version panics
+
+The fix is to close the writer explicitly, after encoding and before the delete loop, and to return if that fails:
+
+```go title="repository.go (after)"
+	// Close publishes the pack, so it has to precede the deletion below (#2370).
+	closed := false
+	defer func() {
+		if !closed {
+			ioutil.CheckClose(wc, &err)
+		}
+	}()
+
+	// ...encode every object into wc...
+
+	closed = true
+	if err = wc.Close(); err != nil {
+		return h, err
+	}
+
+	// Delete the packed, loose objects.
+```
+
+The defer stays, but only for the early returns, where it removes the temporary file.
+
+The detail that matters is the line `closed = true` *before* the call. My first version set a `packPublished` flag *after* a successful close. When the close itself failed, the flag stayed false, the defer closed the writer a second time, and the reproduction panicked:
+
+```text
+close of closed channel
+```
+
+`PackWriter.Close` is not safe to call twice. It closes an internal channel unconditionally. So the explicit close and the deferred one have to be mutually exclusive, and the only way to guarantee that is to mark it closed before trying, whether the attempt succeeds or not.
+
+<Aside>
+That makes the familiar Go pattern of `defer f.Close()` plus an explicit `f.Close()` on the happy path a panic on this type. It is still true after the merge. The reporter and I agreed it belongs in its own issue rather than widening this fix.
+</Aside>
+
+## The test that passed on broken code
+
+My first regression test passed against the unfixed code.
+
+After the failed repack, it asked the same repository handle whether the commit still existed, and the answer was yes. The reason: when the pack writer finishes parsing a pack, it calls a `Notify` hook that registers the new pack's index **in memory**, before `save()` has written anything to disk. So the handle that ran the repack would happily answer from a pack that never landed. Any other process opening the repository would get `object not found`.
+
+While developing the fix, I made the test read through a freshly opened storage instead, the same view the next process gets, and it failed on the old code with the real `object not found`.
+
+The in-memory index turned out to be a bug of its own. Copilot's review pointed at it, and the second commit in the PR makes `Notify` run only when the close succeeded:
+
+```go title="storage/filesystem/dotgit/writers.go"
+-func (w *PackWriter) Close() error {
++func (w *PackWriter) Close() (err error) {
+ 	defer func() {
+-		if w.Notify != nil && w.writer != nil && w.writer.Finished() {
++		if err == nil && w.Notify != nil && w.writer != nil && w.writer.Finished() {
+ 			w.Notify(w.checksum, w.writer)
+ 		}
+```
+
+With that in place, the handle that ran the repack tells the truth too. The merged test injects the failure, checks that the injection actually fired so it cannot pass by accident, then reads the commit and its tree back and asserts that no pack was registered.
+
+Four files, 70 lines added and 3 removed, and most of the additions are the test. The reporter ran the branch themselves before it merged and confirmed the data loss was gone.
+
+## What I took away
+
+- If a `Close` renames, flushes or syncs something, it is not cleanup anymore. I would not put it in a `defer` again without checking what it actually does.
+- Do not remove the old copy until the new one is visible to someone other than the code that wrote it.
+- A test that reads back through the same handle can be fooled by that handle's cache. Open a fresh one.
+- Before designing anything, read how git does it. Here it took three files.
+
+The double close is still open. That is the next thing I would like to see fixed in this corner of go-git.
