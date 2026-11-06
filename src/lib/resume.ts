@@ -1,6 +1,6 @@
 // To publish a new version: add the dated file under public/resume/ and change
 // RESUME_FILE. The rewrite, the links, and the hero's "Updated" label all follow.
-export const RESUME_FILE = "/resume/Kripa_Sindhu_SDE1_2026-09.pdf";
+export const RESUME_FILE = "/resume/Kripa_Sindhu_SDE1_2026-10.pdf";
 
 export const RESUME_URL = "/resume";
 
